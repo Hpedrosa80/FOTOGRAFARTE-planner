@@ -125,7 +125,7 @@ const defaultWeddings: Wedding[] = [
     total: "2500€",
     signal: "750€",
     secondSignal: "750€",
-    balance: "1750€",
+    balance: "1000€",
     ceremony: "15:00",
     bridePrepTime: "09:30",
     groomPrepTime: "10:00",
@@ -184,9 +184,33 @@ const defaultWeddings: Wedding[] = [
 const STORAGE_KEY = "fotografarte-weddings-v4";
 const SYNC_ROW_ID = "main";
 
+function parseMoneyValue(value: string) {
+  const sanitized = value.replace(/[^\d,.-]/g, "").replace(/,/g, ".");
+  const parsed = Number.parseFloat(sanitized);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function formatMoneyValue(value: number) {
+  if (value <= 0) return "0€";
+  const isInteger = Number.isInteger(value);
+  const formatted = isInteger
+    ? value.toString()
+    : value.toLocaleString("pt-PT", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+  return `${formatted}€`;
+}
+
+function calculateBalance(total: string, signal: string, secondSignal: string) {
+  const remaining = parseMoneyValue(total) - parseMoneyValue(signal) - parseMoneyValue(secondSignal);
+  return formatMoneyValue(Math.max(remaining, 0));
+}
+
 function normalizeWeddings(list: Wedding[]) {
   return list.map((w) => ({
     ...w,
+    balance: calculateBalance(w.total || "", w.signal || "", w.secondSignal || ""),
     checklist: { ...emptyChecklist, ...(w.checklist || {}) },
   }));
 }
@@ -236,11 +260,13 @@ function InputField({
   onChange,
   placeholder,
   type = "text",
+  readOnly = false,
 }: {
   value: string;
   onChange: (value: string) => void;
   placeholder: string;
   type?: string;
+  readOnly?: boolean;
 }) {
   return (
     <input
@@ -248,6 +274,7 @@ function InputField({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
+      readOnly={readOnly}
       className="w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2.5 text-[#3f3125] outline-none transition focus:border-[#8c6a43]"
     />
   );
@@ -695,15 +722,29 @@ export default function Page() {
     ? checklistLabels.filter((item) => selectedWedding.checklist[item.key]).length
     : 0;
 
+  const getUpdatedWeddingForm = (
+    current: Omit<Wedding, "id">,
+    key: keyof Omit<Wedding, "id">,
+    value: string
+  ) => {
+    const next = { ...current, [key]: value };
+
+    if (key === "total" || key === "signal" || key === "secondSignal") {
+      next.balance = calculateBalance(next.total, next.signal, next.secondSignal);
+    }
+
+    return next;
+  };
+
   const updateForm = (key: keyof Omit<Wedding, "id">, value: string) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
+    setForm((prev) => getUpdatedWeddingForm(prev, key, value));
   };
 
   const updateEditForm = (
     key: keyof Omit<Wedding, "id">,
     value: string
   ) => {
-    setEditForm((prev) => ({ ...prev, [key]: value }));
+    setEditForm((prev) => getUpdatedWeddingForm(prev, key, value));
   };
 
   const addWedding = () => {
@@ -711,6 +752,7 @@ export default function Page() {
 
     const newWedding: Wedding = {
       ...form,
+      balance: calculateBalance(form.total, form.signal, form.secondSignal),
       phone: form.bridePhone || form.groomPhone,
       email: form.brideEmail || form.groomEmail,
       venue: form.venueName || form.venue,
@@ -762,6 +804,7 @@ export default function Page() {
 
     const normalizedEdit = {
       ...editForm,
+      balance: calculateBalance(editForm.total, editForm.signal, editForm.secondSignal),
       phone: editForm.bridePhone || editForm.groomPhone,
       email: editForm.brideEmail || editForm.groomEmail,
       venue: editForm.venueName || editForm.venue,
@@ -782,8 +825,9 @@ export default function Page() {
 
   const resetAllData = () => {
     localStorage.removeItem(STORAGE_KEY);
-    setWeddings(defaultWeddings);
-    setSelectedId(defaultWeddings[0]?.id ?? null);
+    const resetData = normalizeWeddings(defaultWeddings);
+    setWeddings(resetData);
+    setSelectedId(resetData[0]?.id ?? null);
     setEditingId(null);
     setForm({ ...emptyForm, checklist: { ...emptyChecklist } });
     setEditForm({ ...emptyForm, checklist: { ...emptyChecklist } });
@@ -904,10 +948,10 @@ export default function Page() {
           const minDate = new Date(currentYear, 0, 1);
           const maxDate = new Date(currentYear + 1, 11, 31);
 
-          const finalWeddingsList = updatedWeddingsList.filter((w) => {
+          const finalWeddingsList = normalizeWeddings(updatedWeddingsList.filter((w) => {
             const d = new Date(w.date);
             return d >= minDate && d <= maxDate;
-          });
+          }));
 
           setWeddings(finalWeddingsList);
           
@@ -1460,7 +1504,8 @@ export default function Page() {
                           <InputField
                             placeholder="Falta pagar"
                             value={editForm.balance}
-                            onChange={(value) => updateEditForm("balance", value)}
+                            onChange={() => {}}
+                            readOnly
                           />
                         </div>
                         <div className="grid grid-cols-3 gap-2">
@@ -1807,7 +1852,8 @@ export default function Page() {
                     <InputField
                       placeholder="Falta pagar"
                       value={form.balance}
-                      onChange={(value) => updateForm("balance", value)}
+                      onChange={() => {}}
+                      readOnly
                     />
                   </div>
                   <div className="grid grid-cols-3 gap-2">
