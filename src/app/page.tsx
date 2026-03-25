@@ -991,53 +991,53 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
-          <div className="rounded-[28px] border border-[#bfdbfe] bg-[#f5f9ff] p-6 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className="rounded-2xl bg-[#dbeafe] p-3 text-[#2563eb]">
-                <Heart className="h-5 w-5" />
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+          <div className="rounded-[24px] border border-[#bfdbfe] bg-[#f5f9ff] p-4 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="rounded-2xl bg-[#dbeafe] p-2.5 text-[#2563eb]">
+                <Heart className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-sm text-[#4b7abf]">Casamentos a caminho</p>
-                <p className="text-2xl font-bold text-[#1e3a5f]">{upcomingCount}</p>
+                <p className="text-xs text-[#4b7abf] md:text-sm">Casamentos a caminho</p>
+                <p className="text-xl font-bold text-[#1e3a5f] md:text-2xl">{upcomingCount}</p>
               </div>
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-[#bfdbfe] bg-[#f5f9ff] p-6 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className="rounded-2xl bg-[#dbeafe] p-3 text-[#2563eb]">
-                <Camera className="h-5 w-5" />
+          <div className="rounded-[24px] border border-[#bfdbfe] bg-[#f5f9ff] p-4 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="rounded-2xl bg-[#dbeafe] p-2.5 text-[#2563eb]">
+                <Camera className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-sm text-[#4b7abf]">Fechados</p>
-                <p className="text-2xl font-bold text-[#1e3a5f]">{confirmedCount}</p>
+                <p className="text-xs text-[#4b7abf] md:text-sm">Fechados</p>
+                <p className="text-xl font-bold text-[#1e3a5f] md:text-2xl">{confirmedCount}</p>
               </div>
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-[#bfdbfe] bg-[#f5f9ff] p-6 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className="rounded-2xl bg-[#dbeafe] p-3 text-[#2563eb]">
-                <Euro className="h-5 w-5" />
+          <div className="rounded-[24px] border border-[#bfdbfe] bg-[#f5f9ff] p-4 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="rounded-2xl bg-[#dbeafe] p-2.5 text-[#2563eb]">
+                <Euro className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-sm text-[#4b7abf]">Faturação prevista</p>
-                <p className="text-2xl font-bold text-[#1e3a5f]">
+                <p className="text-xs text-[#4b7abf] md:text-sm">Faturação prevista</p>
+                <p className="text-xl font-bold text-[#1e3a5f] md:text-2xl">
                   {revenueTotal.toLocaleString("pt-PT")}€
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-[#bfdbfe] bg-[#f5f9ff] p-6 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className="rounded-2xl bg-[#dcfce7] p-3 text-[#16a34a]">
-                <Euro className="h-5 w-5" />
+          <div className="rounded-[24px] border border-[#bfdbfe] bg-[#f5f9ff] p-4 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="rounded-2xl bg-[#dcfce7] p-2.5 text-[#16a34a]">
+                <Euro className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-sm text-[#4b7abf]">Lucro Previsto</p>
-                <p className={`text-2xl font-bold ${profitTotal >= 0 ? "text-[#16a34a]" : "text-[#ef4444]"}`}>
+                <p className="text-xs text-[#4b7abf] md:text-sm">Lucro Previsto</p>
+                <p className={`text-xl font-bold md:text-2xl ${profitTotal >= 0 ? "text-[#16a34a]" : "text-[#ef4444]"}`}>
                   {profitTotal >= 0 ? "+" : ""}{profitTotal.toLocaleString("pt-PT")}€
                 </p>
               </div>
