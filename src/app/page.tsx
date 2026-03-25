@@ -63,6 +63,7 @@ type Wedding = {
   package: string;
   total: string;
   signal: string;
+  secondSignal: string;
   balance: string;
   ceremony: string;
   bridePrepTime: string;
@@ -123,6 +124,7 @@ const defaultWeddings: Wedding[] = [
     package: "Foto + Vídeo",
     total: "2500€",
     signal: "750€",
+    secondSignal: "750€",
     balance: "1750€",
     ceremony: "15:00",
     bridePrepTime: "09:30",
@@ -161,6 +163,7 @@ const defaultWeddings: Wedding[] = [
     package: "Fotografia",
     total: "1800€",
     signal: "500€",
+    secondSignal: "",
     balance: "1300€",
     ceremony: "16:30",
     bridePrepTime: "10:00",
@@ -208,6 +211,7 @@ const emptyForm: Omit<Wedding, "id"> = {
   package: "",
   total: "",
   signal: "",
+  secondSignal: "",
   balance: "",
   ceremony: "",
   bridePrepTime: "",
@@ -964,32 +968,15 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-3 md:justify-end">
             <button
               onClick={refreshFromCloud}
-              className="flex min-h-[52px] items-center gap-2 rounded-2xl border border-[#dbcbb7] bg-[#efe4d6] px-4 py-3 text-sm text-[#7b6958] hover:bg-[#dbcbb7] transition-colors"
+              className="flex items-center gap-2 rounded-full border border-[#d8c8b4] bg-[#f9f3eb] px-3 py-2 text-xs font-medium text-[#8c6a43] transition-colors hover:bg-[#efe4d6] md:text-sm"
               disabled={isCloudSyncing}
             >
-              <Calendar className="h-4 w-4" />
-              <span>{isCloudSyncing ? "A atualizar cloud..." : "Atualizar do telemóvel"}</span>
+              <Calendar className="h-3.5 w-3.5" />
+              <span>{isCloudSyncing ? "A atualizar..." : "Atualizar"}</span>
             </button>
-            <div className="flex min-h-[52px] min-w-[220px] flex-col justify-center rounded-2xl border border-[#dbcbb7] bg-[#efe4d6] px-4 py-3 text-sm text-[#7b6958]">
-              <div className="flex items-center gap-2 leading-none">
-                <Calendar className="h-4 w-4" />
-                <span>{weddings.length} eventos registados</span>
-              </div>
-              <div className="mt-1 hidden text-xs text-[#8c6a43] font-medium leading-none md:block">
-                {syncMode === "cloud" ? "Sync: Cloud" : "Sync: Local"}
-              </div>
-              {lastSync && (
-                <div className="mt-1 hidden text-[11px] text-[#a08c79] leading-none md:block">
-                  Última sync: {lastSync}
-                </div>
-              )}
-              <div className="mt-1 hidden max-w-[220px] text-[11px] text-[#a08c79] leading-tight md:block">
-                {syncHint}
-              </div>
-            </div>
           </div>
         </div>
 
@@ -1454,7 +1441,7 @@ export default function Page() {
                           value={editForm.package}
                           onChange={(value) => updateEditForm("package", value)}
                         />
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
                           <InputField
                             placeholder="Total"
                             value={editForm.total}
@@ -1464,6 +1451,11 @@ export default function Page() {
                             placeholder="Sinal"
                             value={editForm.signal}
                             onChange={(value) => updateEditForm("signal", value)}
+                          />
+                          <InputField
+                            placeholder="Segundo sinal"
+                            value={editForm.secondSignal}
+                            onChange={(value) => updateEditForm("secondSignal", value)}
                           />
                           <InputField
                             placeholder="Falta pagar"
@@ -1620,6 +1612,7 @@ export default function Page() {
                       <div className="space-y-2 text-sm text-[#3f3125]">
                         <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Total: {selectedWedding.total || "—"}</div>
                         <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Sinal: {selectedWedding.signal || "—"}</div>
+                        <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Segundo sinal: {selectedWedding.secondSignal || "—"}</div>
                         <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Falta pagar: {selectedWedding.balance || "—"}</div>
                       </div>
                     </div>
@@ -1795,7 +1788,7 @@ export default function Page() {
                     value={form.package}
                     onChange={(value) => updateForm("package", value)}
                   />
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
                     <InputField
                       placeholder="Total"
                       value={form.total}
@@ -1805,6 +1798,11 @@ export default function Page() {
                       placeholder="Sinal"
                       value={form.signal}
                       onChange={(value) => updateForm("signal", value)}
+                    />
+                    <InputField
+                      placeholder="Segundo sinal"
+                      value={form.secondSignal}
+                      onChange={(value) => updateForm("secondSignal", value)}
                     />
                     <InputField
                       placeholder="Falta pagar"
