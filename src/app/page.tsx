@@ -340,13 +340,25 @@ function FinanceInputCard({
   );
 }
 
-function FinanceSummaryCard({ label, value }: { label: string; value: string }) {
+function FinanceSummaryCard({
+  label,
+  value,
+  className = "",
+  valueClassName = "",
+}: {
+  label: string;
+  value: string;
+  className?: string;
+  valueClassName?: string;
+}) {
   return (
-    <div className="rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] p-3">
+    <div className={`rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] p-3 ${className}`}>
       <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8c6a43]">
         {label}
       </div>
-      <div className="mt-1 text-sm font-medium text-[#3f3125]">{value || "—"}</div>
+      <div className={`mt-1 text-sm font-medium text-[#3f3125] ${valueClassName}`}>
+        {value || "—"}
+      </div>
     </div>
   );
 }
@@ -356,6 +368,37 @@ function getSelectedPacks(value: string) {
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function calculateWeddingProfit(wedding: Pick<Wedding, "total" | "teamCosts" | "laboratoryCosts" | "extraCosts">) {
+  return (
+    parseMoneyValue(wedding.total) -
+    parseMoneyValue(wedding.teamCosts) -
+    parseMoneyValue(wedding.laboratoryCosts) -
+    parseMoneyValue(wedding.extraCosts)
+  );
+}
+
+function getDaysUntilWedding(dateString: string) {
+  if (!dateString) return null;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const weddingDate = new Date(dateString);
+  weddingDate.setHours(0, 0, 0, 0);
+
+  const diffMs = weddingDate.getTime() - today.getTime();
+  return Math.round(diffMs / (1000 * 60 * 60 * 24));
+}
+
+function isUpcomingSoon(dateString: string, days = 30) {
+  const daysUntilWedding = getDaysUntilWedding(dateString);
+  return daysUntilWedding !== null && daysUntilWedding >= 0 && daysUntilWedding <= days;
+}
+
+function hasPendingPayment(wedding: Pick<Wedding, "balance">) {
+  return parseMoneyValue(wedding.balance) > 0;
 }
 
 function togglePackSelection(currentValue: string, packLabel: string) {
@@ -799,22 +842,16 @@ export default function Page() {
     (w) => new Date(w.date) >= new Date()
   ).length;
 
-  const confirmedCount = filteredByYear.filter(
-    (w) => w.status === "Confirmado"
-  ).length;
+  const upcomingSoonCount = filteredByYear.filter((w) => isUpcomingSoon(w.date)).length;
+
+  const pendingPaymentCount = filteredByYear.filter((w) => hasPendingPayment(w)).length;
 
   const revenueTotal = weddings.reduce((acc, w) => {
     const value = parseInt(w.total.replace(/\D/g, "") || "0", 10);
     return acc + value;
   }, 0);
 
-  const profitTotal = weddings.reduce((acc, w) => {
-    const revenue = parseInt(w.total.replace(/\D/g, "") || "0", 10);
-    const teamCost = parseInt((w.teamCosts || "").replace(/\D/g, "") || "0", 10);
-    const labCost = parseInt((w.laboratoryCosts || "").replace(/\D/g, "") || "0", 10);
-    const extraCost = parseInt((w.extraCosts || "").replace(/\D/g, "") || "0", 10);
-    return acc + (revenue - teamCost - labCost - extraCost);
-  }, 0);
+  const profitTotal = weddings.reduce((acc, w) => acc + calculateWeddingProfit(w), 0);
 
   const monthWeddings = filteredByYear.filter((w) =>
     isSameMonth(w.date, currentMonth)
@@ -856,6 +893,26 @@ export default function Page() {
   const checklistDoneCount = selectedWedding
     ? checklistLabels.filter((item) => selectedWedding.checklist[item.key]).length
     : 0;
+
+  const selectedWeddingPacks = selectedWedding
+    ? getSelectedPacks(selectedWedding.package)
+    : [];
+
+  const selectedWeddingProfit = selectedWedding
+    ? calculateWeddingProfit(selectedWedding)
+    : 0;
+
+  const selectedWeddingDaysUntil = selectedWedding
+    ? getDaysUntilWedding(selectedWedding.date)
+    : null;
+
+  const selectedWeddingHasPendingPayment = selectedWedding
+    ? hasPendingPayment(selectedWedding)
+    : false;
+
+  const selectedWeddingIsUpcomingSoon = selectedWedding
+    ? isUpcomingSoon(selectedWedding.date)
+    : false;
 
   const getUpdatedWeddingForm = (
     current: Omit<Wedding, "id">,
@@ -1205,18 +1262,19 @@ export default function Page() {
               <div>
                 <p className="text-xs text-[#7b6958] md:text-sm">Casamentos a caminho</p>
                 <p className="text-xl font-bold text-[#3f3125] md:text-2xl">{upcomingCount}</p>
+                <p className="text-[11px] text-[#a75d4d] md:text-xs">{upcomingSoonCount} nos próximos 30 dias</p>
               </div>
             </div>
           </div>
 
           <div className="rounded-[24px] border border-[#dbcbb7] bg-[#fffaf3] p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-[#efe4d6] p-2.5 text-[#8c6a43]">
-                <Camera className="h-4 w-4" />
+              <div className="rounded-2xl bg-[#fcf2ef] p-2.5 text-[#a75d4d]">
+                <Clock className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-xs text-[#7b6958] md:text-sm">Fechados</p>
-                <p className="text-xl font-bold text-[#3f3125] md:text-2xl">{confirmedCount}</p>
+                <p className="text-xs text-[#7b6958] md:text-sm">Pagamentos pendentes</p>
+                <p className="text-xl font-bold text-[#a75d4d] md:text-2xl">{pendingPaymentCount}</p>
               </div>
             </div>
           </div>
@@ -1320,29 +1378,49 @@ export default function Page() {
 
           <div className="mt-4 space-y-2 md:hidden">
             {monthWeddings.length > 0 ? (
-              monthWeddings.map((wedding) => (
-                <button
-                  key={wedding.id}
-                  onClick={() => {
-                    setSelectedId(wedding.id);
-                    setMobileSection("couple");
-                  }}
-                  className="flex w-full items-center justify-between rounded-2xl border border-[#dbcbb7] bg-[#f7efe5] px-4 py-3 text-left"
-                >
-                  <div>
-                    <div className="text-sm font-semibold text-[#3f3125]">{wedding.couple}</div>
-                    <div className="text-xs text-[#7b6958]">
-                      {new Date(wedding.date).toLocaleDateString("pt-PT", {
-                        day: "2-digit",
-                        month: "2-digit",
-                      })} • {wedding.venueName || wedding.venue}
+              monthWeddings.map((wedding) => {
+                const weddingDaysUntil = getDaysUntilWedding(wedding.date);
+                const weddingIsUpcomingSoon = isUpcomingSoon(wedding.date);
+                const weddingHasPendingPayment = hasPendingPayment(wedding);
+
+                return (
+                  <button
+                    key={wedding.id}
+                    onClick={() => {
+                      setSelectedId(wedding.id);
+                      setMobileSection("couple");
+                    }}
+                    className="flex w-full items-center justify-between rounded-2xl border border-[#dbcbb7] bg-[#f7efe5] px-4 py-3 text-left"
+                  >
+                    <div>
+                      <div className="text-sm font-semibold text-[#3f3125]">{wedding.couple}</div>
+                      <div className="text-xs text-[#7b6958]">
+                        {new Date(wedding.date).toLocaleDateString("pt-PT", {
+                          day: "2-digit",
+                          month: "2-digit",
+                        })} • {wedding.venueName || wedding.venue}
+                      </div>
+                      {(weddingIsUpcomingSoon || weddingHasPendingPayment) && (
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {weddingIsUpcomingSoon && weddingDaysUntil !== null && (
+                            <span className="rounded-full border border-[#ead3cc] bg-[#fcf2ef] px-2 py-1 text-[10px] font-semibold text-[#a75d4d]">
+                              {weddingDaysUntil === 0 ? "É hoje" : `${weddingDaysUntil} dias`}
+                            </span>
+                          )}
+                          {weddingHasPendingPayment && (
+                            <span className="rounded-full border border-[#ead3cc] bg-[#fcf2ef] px-2 py-1 text-[10px] font-semibold text-[#a75d4d]">
+                              Falta {wedding.balance}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
-                  </div>
-                  <span className={`rounded-full border px-2 py-1 text-[10px] font-medium ${statusStyles[wedding.status]}`}>
-                    {wedding.status}
-                  </span>
-                </button>
-              ))
+                    <span className={`rounded-full border px-2 py-1 text-[10px] font-medium ${statusStyles[wedding.status]}`}>
+                      {wedding.status}
+                    </span>
+                  </button>
+                );
+              })
             ) : (
               <div className="rounded-2xl border border-[#dbcbb7] bg-[#f7efe5] px-4 py-3 text-sm text-[#7b6958]">
                 Sem casamentos marcados neste mês.
@@ -1488,53 +1566,73 @@ export default function Page() {
             </div>
 
             <div className="space-y-3">
-              {filteredByYear.map((wedding) => (
-                <button
-                  key={wedding.id}
-                  onClick={() => {
-                    setSelectedId(wedding.id);
-                    setMobileSection("couple");
-                    setEditingId(null);
-                    setCurrentMonth(new Date(wedding.date));
-                  }}
-                  className={`w-full rounded-2xl border p-4 text-left transition hover:shadow-sm ${
-                    wedding.checklist.weddingDone
-                      ? "border-[#d9ddcf] bg-[#eef0e7]"
-                      : selectedId === wedding.id
-                      ? "border-[#8c6a43] bg-[#f7efe5]"
-                      : "border-[#dbcbb7] bg-[#fffaf3]"
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-base font-semibold text-[#3f3125]">
-                        {wedding.couple}
-                      </p>
-                      <p className="mt-1 text-sm text-[#7b6958]">
-                        {wedding.date} • {wedding.venueName || wedding.venue}
-                      </p>
-                      <p className="mt-1 text-sm text-[#7b6958]">
-                        {wedding.brideName} / {wedding.groomName}
-                      </p>
-                    </div>
+              {filteredByYear.map((wedding) => {
+                const weddingDaysUntil = getDaysUntilWedding(wedding.date);
+                const weddingIsUpcomingSoon = isUpcomingSoon(wedding.date);
+                const weddingHasPendingPayment = hasPendingPayment(wedding);
 
-                    <div className="flex flex-col gap-2">
-                      {wedding.checklist.weddingDone && (
-                        <span className="rounded-full border border-[#d9ddcf] bg-[#eef0e7] px-3 py-1 text-xs font-medium text-[#5d6b43]">
-                          Casamento efetuado
+                return (
+                  <button
+                    key={wedding.id}
+                    onClick={() => {
+                      setSelectedId(wedding.id);
+                      setMobileSection("couple");
+                      setEditingId(null);
+                      setCurrentMonth(new Date(wedding.date));
+                    }}
+                    className={`w-full rounded-2xl border p-4 text-left transition hover:shadow-sm ${
+                      wedding.checklist.weddingDone
+                        ? "border-[#d9ddcf] bg-[#eef0e7]"
+                        : selectedId === wedding.id
+                        ? "border-[#8c6a43] bg-[#f7efe5]"
+                        : "border-[#dbcbb7] bg-[#fffaf3]"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-base font-semibold text-[#3f3125]">
+                          {wedding.couple}
+                        </p>
+                        <p className="mt-1 text-sm text-[#7b6958]">
+                          {wedding.date} • {wedding.venueName || wedding.venue}
+                        </p>
+                        <p className="mt-1 text-sm text-[#7b6958]">
+                          {wedding.brideName} / {wedding.groomName}
+                        </p>
+                        {(weddingIsUpcomingSoon || weddingHasPendingPayment) && (
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {weddingIsUpcomingSoon && weddingDaysUntil !== null && (
+                              <span className="rounded-full border border-[#ead3cc] bg-[#fcf2ef] px-3 py-1 text-xs font-semibold text-[#a75d4d]">
+                                {weddingDaysUntil === 0 ? "Casamento hoje" : `Faltam ${weddingDaysUntil} dias`}
+                              </span>
+                            )}
+                            {weddingHasPendingPayment && (
+                              <span className="rounded-full border border-[#ead3cc] bg-[#fcf2ef] px-3 py-1 text-xs font-semibold text-[#a75d4d]">
+                                Falta receber {wedding.balance}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col gap-2">
+                        {wedding.checklist.weddingDone && (
+                          <span className="rounded-full border border-[#d9ddcf] bg-[#eef0e7] px-3 py-1 text-xs font-medium text-[#5d6b43]">
+                            Casamento efetuado
+                          </span>
+                        )}
+                        <span
+                          className={`rounded-full border px-3 py-1 text-xs font-medium ${
+                            statusStyles[wedding.status]
+                          }`}
+                        >
+                          {wedding.status}
                         </span>
-                      )}
-                      <span
-                        className={`rounded-full border px-3 py-1 text-xs font-medium ${
-                          statusStyles[wedding.status]
-                        }`}
-                      >
-                        {wedding.status}
-                      </span>
+                      </div>
                     </div>
-                  </div>
-                </button>
-              ))}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -1793,6 +1891,23 @@ export default function Page() {
                       </span>
                     </div>
 
+                    {(selectedWeddingIsUpcomingSoon || selectedWeddingHasPendingPayment) && (
+                      <div className="flex flex-wrap gap-2">
+                        {selectedWeddingIsUpcomingSoon && selectedWeddingDaysUntil !== null && (
+                          <span className="rounded-full border border-[#ead3cc] bg-[#fcf2ef] px-3 py-1 text-xs font-semibold text-[#a75d4d]">
+                            {selectedWeddingDaysUntil === 0
+                              ? "Casamento hoje"
+                              : `Faltam ${selectedWeddingDaysUntil} dias para o casamento`}
+                          </span>
+                        )}
+                        {selectedWeddingHasPendingPayment && (
+                          <span className="rounded-full border border-[#ead3cc] bg-[#fcf2ef] px-3 py-1 text-xs font-semibold text-[#a75d4d]">
+                            Pagamento pendente: {selectedWedding.balance}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
                     <div className="rounded-2xl bg-[#f7efe5] p-4">
                       <SectionTitle icon={<Users className="h-4 w-4" />} title="Contactos dos noivos" />
                       <div className="space-y-3 text-sm text-[#3f3125]">
@@ -1831,13 +1946,37 @@ export default function Page() {
                     <div className="rounded-2xl bg-[#f7efe5] p-4">
                       <SectionTitle icon={<Camera className="h-4 w-4" />} title="Serviço" />
                       <div className="space-y-2 text-sm text-[#3f3125]">
-                        <div className="flex items-center gap-2"><Camera className="h-4 w-4" /> Pack: {selectedWedding.package || "—"}</div>
+                        <div className="flex items-start gap-2">
+                          <Camera className="mt-0.5 h-4 w-4" />
+                          <div>
+                            <div>Pack contratado</div>
+                            {selectedWeddingPacks.length > 0 ? (
+                              <div className="mt-2 flex flex-wrap gap-2">
+                                {selectedWeddingPacks.map((pack) => (
+                                  <span
+                                    key={pack}
+                                    className="rounded-full border border-[#cdb79c] bg-[#fffaf3] px-3 py-1 text-xs font-semibold text-[#7f6548]"
+                                  >
+                                    {pack}
+                                  </span>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="mt-1 text-sm text-[#7b6958]">{selectedWedding.package || "—"}</div>
+                            )}
+                          </div>
+                        </div>
                         <div className="flex items-center gap-2"><Video className="h-4 w-4" /> Tipo de entrega: {selectedWedding.delivery || "—"}</div>
                       </div>
                     </div>
 
                     <div className="rounded-2xl bg-[#f7efe5] p-4">
                       <SectionTitle icon={<Euro className="h-4 w-4" />} title="Financeiro" />
+                      {selectedWeddingHasPendingPayment && (
+                        <div className="mb-3 rounded-2xl border border-[#ead3cc] bg-[#fcf2ef] px-3 py-2 text-xs font-semibold text-[#a75d4d]">
+                          Ainda falta receber {selectedWedding.balance} deste casamento.
+                        </div>
+                      )}
                       <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
                         <FinanceSummaryCard label="Total serviço" value={selectedWedding.total} />
                         <FinanceSummaryCard label="1 sinal" value={selectedWedding.signal} />
@@ -1846,7 +1985,18 @@ export default function Page() {
                         <FinanceSummaryCard label="Freelancers" value={selectedWedding.teamCosts} />
                         <FinanceSummaryCard label="Laboratorio" value={selectedWedding.laboratoryCosts} />
                         <FinanceSummaryCard label="Extras" value={selectedWedding.extraCosts} />
-                        <FinanceSummaryCard label="Falta pagar" value={selectedWedding.balance} />
+                        <FinanceSummaryCard
+                          label="Falta pagar"
+                          value={selectedWedding.balance}
+                          className={selectedWeddingHasPendingPayment ? "border-[#ead3cc] bg-[#fcf2ef]" : ""}
+                          valueClassName={selectedWeddingHasPendingPayment ? "text-[#a75d4d]" : ""}
+                        />
+                        <FinanceSummaryCard
+                          label="Lucro real"
+                          value={formatMoneyValue(selectedWeddingProfit)}
+                          className={selectedWeddingProfit >= 0 ? "border-[#d9ddcf] bg-[#eef0e7]" : "border-[#ead3cc] bg-[#fcf2ef]"}
+                          valueClassName={selectedWeddingProfit >= 0 ? "text-[#5d6b43]" : "text-[#a75d4d]"}
+                        />
                       </div>
                     </div>
 
