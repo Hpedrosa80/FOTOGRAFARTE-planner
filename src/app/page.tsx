@@ -954,7 +954,7 @@ export default function Page() {
             />
             <div className="flex flex-col justify-center">
               <h1 className="text-2xl font-bold tracking-tight text-[#1e3a5f]">
-                FOTOGRAFARTE Wedding Planner
+                FOTOGRAFARTE planner
               </h1>
               <p className="mt-1 text-sm text-[#4b7abf]">
                 Organiza casais, contactos, locais, pagamentos, timeline do dia e entregas dos teus casamentos.
@@ -963,35 +963,6 @@ export default function Page() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <div className="flex flex-col gap-2">
-              <label className={`flex items-center gap-2 rounded-2xl border border-[#bfdbfe] px-4 py-3 text-sm text-[#4b7abf] transition-colors cursor-pointer ${
-                isSyncing ? 'bg-[#dbeafe] opacity-50' : 'bg-[#dbeafe] hover:bg-[#bfdbfe]'
-              }`}>
-                <Calendar className="h-4 w-4" />
-                <span>{isSyncing ? 'Sincronizando...' : 'Sincronizar Google Calendar'}</span>
-                <input
-                  type="file"
-                  accept=".ics"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file && !isSyncing) {
-                      importFromICal(file);
-                    }
-                    // Reset input
-                    e.target.value = '';
-                  }}
-                  className="hidden"
-                  disabled={isSyncing}
-                />
-              </label>
-              <div className="text-xs text-[#6b9fd4] max-w-xs">
-                1. Acesse calendar.google.com
-                <br />
-                2. Configurações → Importar/Exportar
-                <br />
-                3. Exporte como .ics e importe aqui
-              </div>
-            </div>
             <button
               onClick={refreshFromCloud}
               className="flex items-center gap-2 rounded-2xl border border-[#bfdbfe] bg-[#dbeafe] px-4 py-3 text-sm text-[#4b7abf] hover:bg-[#bfdbfe] transition-colors"
@@ -999,16 +970,6 @@ export default function Page() {
             >
               <Calendar className="h-4 w-4" />
               <span>{isCloudSyncing ? "A atualizar cloud..." : "Atualizar do telemóvel"}</span>
-            </button>
-            <button
-              onClick={() => {
-                const icalContent = generateICalContent(weddings);
-                downloadICalFile(icalContent, 'fotografarte-casamentos.ics');
-              }}
-              className="flex items-center gap-2 rounded-2xl border border-[#bfdbfe] bg-[#dbeafe] px-4 py-3 text-sm text-[#4b7abf] hover:bg-[#bfdbfe] transition-colors"
-            >
-              <Calendar className="h-4 w-4" />
-              <span>Exportar para Google Calendar</span>
             </button>
             <div className="flex flex-col items-center gap-1 rounded-2xl border border-[#bfdbfe] bg-[#dbeafe] px-4 py-3 text-sm text-[#4b7abf]">
               <div className="flex items-center gap-2">
