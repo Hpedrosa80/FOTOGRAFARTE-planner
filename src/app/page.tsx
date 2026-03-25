@@ -501,6 +501,7 @@ export default function Page() {
   const [isCloudSyncing, setIsCloudSyncing] = useState(false);
   const [syncMode, setSyncMode] = useState<"cloud" | "local">("local");
   const [mobileSection, setMobileSection] = useState<"agenda" | "couple" | "add">("agenda");
+  const [isAddPanelOpen, setIsAddPanelOpen] = useState(false);
   const [syncHint, setSyncHint] = useState(
     "Sincronização local (define as chaves do Supabase para sincronizar com o telemóvel)."
   );
@@ -751,6 +752,20 @@ export default function Page() {
     setEditForm((prev) => getUpdatedWeddingForm(prev, key, value));
   };
 
+  const toggleAddPanel = () => {
+    setIsAddPanelOpen((prev) => {
+      const next = !prev;
+
+      if (next) {
+        setMobileSection("add");
+      } else if (mobileSection === "add") {
+        setMobileSection("agenda");
+      }
+
+      return next;
+    });
+  };
+
   const addWedding = () => {
     if (!form.couple || !form.date) return;
 
@@ -769,6 +784,7 @@ export default function Page() {
     setSelectedId(newWedding.id);
     setCurrentMonth(new Date(newWedding.date));
     setMobileSection("couple");
+    setIsAddPanelOpen(false);
     setForm({ ...emptyForm, checklist: { ...emptyChecklist } });
   };
 
@@ -1254,14 +1270,14 @@ export default function Page() {
             Casal
           </button>
           <button
-            onClick={() => setMobileSection("add")}
+            onClick={toggleAddPanel}
             className={`rounded-2xl px-4 py-3 text-sm font-medium transition ${
-              mobileSection === "add"
+              mobileSection === "add" && isAddPanelOpen
                 ? "bg-[#8c6a43] text-white shadow-sm"
                 : "border border-[#dbcbb7] bg-[#fffaf3] text-[#7b6958]"
             }`}
           >
-            Adicionar
+            {isAddPanelOpen ? "Fechar" : "Adicionar"}
           </button>
         </div>
 
@@ -1272,6 +1288,13 @@ export default function Page() {
                 <h2 className="text-xl font-semibold text-[#3f3125]">
                   Agenda de Casamentos
                 </h2>
+                <button
+                  onClick={toggleAddPanel}
+                  className="flex items-center rounded-2xl bg-[#efe4d6] px-3 py-1.5 text-xs text-[#7b6958] transition hover:opacity-90"
+                >
+                  <Plus className="mr-1 h-3.5 w-3.5" />
+                  {isAddPanelOpen ? "Fechar" : "Adicionar casamento"}
+                </button>
                 {deletedWedding && (
                   <button
                     onClick={undoDelete}
@@ -1731,10 +1754,18 @@ export default function Page() {
             </div>
           </div>
 
-          <div className={`${mobileSection === "add" ? "block" : "hidden"} rounded-[28px] border border-[#dbcbb7] bg-[#fffaf3] p-6 shadow-sm xl:block`}>
-            <h2 className="mb-4 text-xl font-semibold text-[#3f3125]">
-              Adicionar Casamento
-            </h2>
+          <div className={`${mobileSection === "add" && isAddPanelOpen ? "block" : "hidden"} rounded-[28px] border border-[#dbcbb7] bg-[#fffaf3] p-6 shadow-sm ${isAddPanelOpen ? "xl:block" : "xl:hidden"}`}>
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h2 className="text-xl font-semibold text-[#3f3125]">
+                Adicionar Casamento
+              </h2>
+              <button
+                onClick={toggleAddPanel}
+                className="rounded-2xl border border-[#dbcbb7] bg-[#f7efe5] px-3 py-2 text-sm text-[#7b6958] transition hover:opacity-90"
+              >
+                Fechar
+              </button>
+            </div>
 
             <div className="space-y-4">
               <div>
