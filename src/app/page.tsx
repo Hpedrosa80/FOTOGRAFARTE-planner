@@ -465,6 +465,7 @@ export default function Page() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [isCloudSyncing, setIsCloudSyncing] = useState(false);
   const [syncMode, setSyncMode] = useState<"cloud" | "local">("local");
+  const [mobileSection, setMobileSection] = useState<"agenda" | "couple" | "add">("agenda");
   const [syncHint, setSyncHint] = useState(
     "Sincronização local (define as chaves do Supabase para sincronizar com o telemóvel)."
   );
@@ -717,6 +718,7 @@ export default function Page() {
     setWeddings(updated);
     setSelectedId(newWedding.id);
     setCurrentMonth(new Date(newWedding.date));
+    setMobileSection("couple");
     setForm({ ...emptyForm, checklist: { ...emptyChecklist } });
   };
 
@@ -1118,7 +1120,10 @@ export default function Page() {
               monthWeddings.map((wedding) => (
                 <button
                   key={wedding.id}
-                  onClick={() => setSelectedId(wedding.id)}
+                  onClick={() => {
+                    setSelectedId(wedding.id);
+                    setMobileSection("couple");
+                  }}
                   className="flex w-full items-center justify-between rounded-2xl border border-[#bfdbfe] bg-[#eef3fb] px-4 py-3 text-left"
                 >
                   <div>
@@ -1192,8 +1197,41 @@ export default function Page() {
           </div>
         </div>
 
+        <div className="grid grid-cols-3 gap-2 xl:hidden">
+          <button
+            onClick={() => setMobileSection("agenda")}
+            className={`rounded-2xl px-4 py-3 text-sm font-medium transition ${
+              mobileSection === "agenda"
+                ? "bg-[#2563eb] text-white"
+                : "border border-[#bfdbfe] bg-[#f5f9ff] text-[#4b7abf]"
+            }`}
+          >
+            Agenda
+          </button>
+          <button
+            onClick={() => setMobileSection("couple")}
+            className={`rounded-2xl px-4 py-3 text-sm font-medium transition ${
+              mobileSection === "couple"
+                ? "bg-[#2563eb] text-white"
+                : "border border-[#bfdbfe] bg-[#f5f9ff] text-[#4b7abf]"
+            }`}
+          >
+            Casal
+          </button>
+          <button
+            onClick={() => setMobileSection("add")}
+            className={`rounded-2xl px-4 py-3 text-sm font-medium transition ${
+              mobileSection === "add"
+                ? "bg-[#2563eb] text-white"
+                : "border border-[#bfdbfe] bg-[#f5f9ff] text-[#4b7abf]"
+            }`}
+          >
+            Adicionar
+          </button>
+        </div>
+
         <div className="grid gap-6 xl:grid-cols-[1.05fr_1fr_1.2fr]">
-          <div className="rounded-[28px] border border-[#bfdbfe] bg-[#f5f9ff] p-6 shadow-sm">
+          <div className={`${mobileSection === "agenda" ? "block" : "hidden"} rounded-[28px] border border-[#bfdbfe] bg-[#f5f9ff] p-6 shadow-sm xl:block`}>
             <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-3">
                 <h2 className="text-xl font-semibold text-[#1e3a5f]">
@@ -1242,6 +1280,7 @@ export default function Page() {
                   key={wedding.id}
                   onClick={() => {
                     setSelectedId(wedding.id);
+                    setMobileSection("couple");
                     setEditingId(null);
                     setCurrentMonth(new Date(wedding.date));
                   }}
@@ -1286,7 +1325,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className={`${mobileSection === "couple" ? "block space-y-6" : "hidden"} xl:block xl:space-y-6`}>
             <div className="rounded-[28px] border border-[#bfdbfe] bg-[#f5f9ff] p-6 shadow-sm">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <h2 className="text-xl font-semibold text-[#1e3a5f]">
@@ -1650,7 +1689,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-[#bfdbfe] bg-[#f5f9ff] p-6 shadow-sm">
+          <div className={`${mobileSection === "add" ? "block" : "hidden"} rounded-[28px] border border-[#bfdbfe] bg-[#f5f9ff] p-6 shadow-sm xl:block`}>
             <h2 className="mb-4 text-xl font-semibold text-[#1e3a5f]">
               Adicionar Casamento
             </h2>
