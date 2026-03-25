@@ -1281,20 +1281,23 @@ export default function Page() {
           </button>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[1.05fr_1fr_1.2fr]">
+        <div className="sticky top-3 z-20 hidden xl:flex justify-end">
+          <button
+            onClick={toggleAddPanel}
+            className="flex items-center rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-4 py-3 text-sm font-medium text-[#7b6958] shadow-sm transition hover:bg-[#f7efe5]"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            {isAddPanelOpen ? "Fechar adicionar casamento" : "Adicionar casamento"}
+          </button>
+        </div>
+
+        <div className={`grid gap-6 ${isAddPanelOpen ? "xl:grid-cols-[1fr_1.45fr_0.95fr]" : "xl:grid-cols-[1fr_1.55fr]"}`}>
           <div className={`${mobileSection === "agenda" ? "block" : "hidden"} rounded-[28px] border border-[#dbcbb7] bg-[#fffaf3] p-6 shadow-sm xl:block`}>
             <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-3">
                 <h2 className="text-xl font-semibold text-[#3f3125]">
                   Agenda de Casamentos
                 </h2>
-                <button
-                  onClick={toggleAddPanel}
-                  className="flex items-center rounded-2xl bg-[#efe4d6] px-3 py-1.5 text-xs text-[#7b6958] transition hover:opacity-90"
-                >
-                  <Plus className="mr-1 h-3.5 w-3.5" />
-                  {isAddPanelOpen ? "Fechar" : "Adicionar casamento"}
-                </button>
                 {deletedWedding && (
                   <button
                     onClick={undoDelete}
