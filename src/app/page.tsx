@@ -947,9 +947,9 @@ export default function Page() {
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="flex flex-col gap-4 rounded-[28px] border border-[#bfdbfe] bg-[#f5f9ff] p-6 shadow-sm md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">
-            <div className="rounded-[28px] bg-[#0f172a] px-5 py-4 shadow-sm ring-1 ring-[#1e293b]">
+            <div className="rounded-[28px] bg-white px-5 py-4 shadow-sm ring-1 ring-[#dbeafe]">
               <img
-                src="/logo-fotografarte-corporate2.png"
+                src="/logo-fotografarte-preto.png"
                 alt="Fotografarte Logo"
                 className="h-16 w-auto md:h-20"
               />
