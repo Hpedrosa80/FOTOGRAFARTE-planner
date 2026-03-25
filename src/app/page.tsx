@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { supabase } from "../lib/supabase";
 import {
   Calendar,
   Clock,
@@ -178,6 +179,14 @@ const defaultWeddings: Wedding[] = [
 ];
 
 const STORAGE_KEY = "fotografarte-weddings-v4";
+const SYNC_ROW_ID = "main";
+
+function normalizeWeddings(list: Wedding[]) {
+  return list.map((w) => ({
+    ...w,
+    checklist: { ...emptyChecklist, ...(w.checklist || {}) },
+  }));
+}
 
 const emptyForm: Omit<Wedding, "id"> = {
   couple: "",
@@ -454,33 +463,134 @@ export default function Page() {
   const [editForm, setEditForm] = useState<Omit<Wedding, "id">>(emptyForm);
   const [lastSync, setLastSync] = useState<string | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isCloudSyncing, setIsCloudSyncing] = useState(false);
+  const [syncMode, setSyncMode] = useState<"cloud" | "local">("local");
+  const [syncHint, setSyncHint] = useState(
+    "Sincronização local (define as chaves do Supabase para sincronizar com o telemóvel)."
+  );
   const [yearFilter, setYearFilter] = useState<"all" | "current" | "next" | "currentNext">("currentNext");
   const [currentMonth, setCurrentMonth] = useState(() => {    const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
   });
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    let cancelled = false;
 
-    if (saved) {
-      const parsed: Wedding[] = JSON.parse(saved).map((w: Wedding) => ({
-        ...w,
-        checklist: { ...emptyChecklist, ...(w.checklist || {}) },
-      }));
-      setWeddings(parsed);
-      setSelectedId(parsed[0]?.id ?? null);
-    } else {
-      setWeddings(defaultWeddings);
-      setSelectedId(defaultWeddings[0]?.id ?? null);
-    }
+    const bootstrap = async () => {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      const localData = saved
+        ? normalizeWeddings(JSON.parse(saved) as Wedding[])
+        : normalizeWeddings(defaultWeddings);
 
-    setIsLoaded(true);
+      let initialData = localData;
+
+      if (supabase) {
+        const { data, error } = await supabase
+          .from("planner_state")
+          .select("payload, updated_at")
+          .eq("id", SYNC_ROW_ID)
+          .maybeSingle();
+
+        if (!error && data?.payload && Array.isArray(data.payload)) {
+          initialData = normalizeWeddings(data.payload as Wedding[]);
+          setSyncMode("cloud");
+          setSyncHint("Sincronização com telemóvel ativa via Supabase.");
+          if (data.updated_at) {
+            setLastSync(new Date(data.updated_at).toLocaleString("pt-PT"));
+          }
+        } else if (!error && !data) {
+          await supabase
+            .from("planner_state")
+            .upsert(
+              {
+                id: SYNC_ROW_ID,
+                payload: localData,
+                updated_at: new Date().toISOString(),
+              },
+              { onConflict: "id" }
+            );
+          setSyncMode("cloud");
+          setSyncHint("Sincronização com telemóvel ativa via Supabase.");
+        } else if (error) {
+          setSyncHint(
+            "Cloud indisponível. A usar modo local. Verifica tabela planner_state e variáveis Supabase."
+          );
+        }
+      }
+
+      if (cancelled) return;
+      setWeddings(initialData);
+      setSelectedId(initialData[0]?.id ?? null);
+      setIsLoaded(true);
+    };
+
+    bootstrap();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
     if (!isLoaded) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(weddings));
+
+    if (!supabase) return;
+    const client = supabase;
+
+    const timer = setTimeout(async () => {
+      setIsCloudSyncing(true);
+      const { error } = await client
+        .from("planner_state")
+        .upsert(
+          {
+            id: SYNC_ROW_ID,
+            payload: weddings,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "id" }
+        );
+
+      if (!error) {
+        setSyncMode("cloud");
+        setSyncHint("Sincronização com telemóvel ativa via Supabase.");
+        setLastSync(new Date().toLocaleString("pt-PT"));
+      }
+      setIsCloudSyncing(false);
+    }, 700);
+
+    return () => clearTimeout(timer);
   }, [weddings, isLoaded]);
+
+  const refreshFromCloud = async () => {
+    if (!supabase) {
+      alert("Configura Supabase para sincronizar com o telemóvel.");
+      return;
+    }
+
+    setIsCloudSyncing(true);
+    const { data, error } = await supabase
+      .from("planner_state")
+      .select("payload, updated_at")
+      .eq("id", SYNC_ROW_ID)
+      .maybeSingle();
+
+    if (error || !data?.payload || !Array.isArray(data.payload)) {
+      setIsCloudSyncing(false);
+      alert("Não foi possível atualizar da cloud.");
+      return;
+    }
+
+    const cloudData = normalizeWeddings(data.payload as Wedding[]);
+    setWeddings(cloudData);
+    setSelectedId(cloudData[0]?.id ?? null);
+    if (data.updated_at) {
+      setLastSync(new Date(data.updated_at).toLocaleString("pt-PT"));
+    }
+    setSyncMode("cloud");
+    setSyncHint("Dados atualizados da cloud com sucesso.");
+    setIsCloudSyncing(false);
+  };
 
   const filteredWeddings = useMemo(() => {
     return weddings
@@ -883,6 +993,14 @@ export default function Page() {
               </div>
             </div>
             <button
+              onClick={refreshFromCloud}
+              className="flex items-center gap-2 rounded-2xl border border-[#bfdbfe] bg-[#dbeafe] px-4 py-3 text-sm text-[#4b7abf] hover:bg-[#bfdbfe] transition-colors"
+              disabled={isCloudSyncing}
+            >
+              <Calendar className="h-4 w-4" />
+              <span>{isCloudSyncing ? "A atualizar cloud..." : "Atualizar do telemóvel"}</span>
+            </button>
+            <button
               onClick={() => {
                 const icalContent = generateICalContent(weddings);
                 downloadICalFile(icalContent, 'fotografarte-casamentos.ics');
@@ -897,11 +1015,17 @@ export default function Page() {
                 <Calendar className="h-4 w-4" />
                 <span>{weddings.length} eventos registados</span>
               </div>
+              <div className="text-xs text-[#2563eb] font-medium">
+                {syncMode === "cloud" ? "Sync: Cloud" : "Sync: Local"}
+              </div>
               {lastSync && (
                 <div className="text-xs text-[#6b9fd4]">
                   Última sync: {lastSync}
                 </div>
               )}
+              <div className="text-[11px] text-[#6b9fd4] text-center max-w-[240px]">
+                {syncHint}
+              </div>
             </div>
           </div>
         </div>
