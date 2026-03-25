@@ -221,10 +221,10 @@ const emptyForm: Omit<Wedding, "id"> = {
 };
 
 const statusStyles: Record<WeddingStatus, string> = {
-  Pendente: "bg-[#e7edf3] text-[#37556f] border-[#b5c7d8]",
-  Confirmado: "bg-[#e8f3ec] text-[#2f6b4f] border-[#c7decf]",
-  Editado: "bg-[#f5efe7] text-[#8a6a46] border-[#e2d3bf]",
-  Entregue: "bg-[#e7edf3] text-[#5f7388] border-[#b5c7d8]",
+  Pendente: "bg-[#efe4d6] text-[#7f6548] border-[#cdb79c]",
+  Confirmado: "bg-[#eef0e7] text-[#5d6b43] border-[#d9ddcf]",
+  Editado: "bg-[#f6ede3] text-[#9b7553] border-[#dcc7b0]",
+  Entregue: "bg-[#efe4d6] text-[#7b6958] border-[#cdb79c]",
 };
 
 function InputField({
@@ -244,7 +244,7 @@ function InputField({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full rounded-2xl border border-[#d7e1ea] bg-[#ffffff] px-3 py-2.5 text-[#16324f] outline-none transition focus:border-[#1f4e79]"
+      className="w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2.5 text-[#3f3125] outline-none transition focus:border-[#8c6a43]"
     />
   );
 }
@@ -266,7 +266,7 @@ function isSameMonth(dateString: string, monthDate: Date) {
 
 function SectionTitle({ icon, title }: { icon: React.ReactNode; title: string }) {
   return (
-    <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#5f7388]">
+    <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#7b6958]">
       {icon}
       <span>{title}</span>
     </div>
@@ -938,16 +938,16 @@ export default function Page() {
 
   if (!isLoaded) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f3f6f9] text-[#5f7388]">
+      <div className="flex min-h-screen items-center justify-center bg-[#f6f1ea] text-[#7b6958]">
         A carregar...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f3f6f9] p-4 text-[#16324f] md:p-8">
+    <div className="min-h-screen bg-[#f6f1ea] p-4 text-[#3f3125] md:p-8">
       <div className="mx-auto max-w-7xl space-y-6">
-        <div className="flex flex-col gap-4 rounded-[28px] border border-[#d7e1ea] bg-[#ffffff] p-6 shadow-sm md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 rounded-[28px] border border-[#dbcbb7] bg-[#fffaf3] p-6 shadow-sm md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3 md:gap-5">
             <img
               src="/logo-fotografarte-preto.png"
@@ -955,10 +955,10 @@ export default function Page() {
               className="h-20 w-auto shrink-0 object-contain md:h-28"
             />
             <div className="flex flex-col justify-center">
-              <h1 className="text-2xl font-bold tracking-tight text-[#16324f]">
+              <h1 className="text-2xl font-bold tracking-tight text-[#3f3125]">
                 FOTOGRAFARTE planner
               </h1>
-              <p className="mt-1 text-sm text-[#5f7388]">
+              <p className="mt-1 text-sm text-[#7b6958]">
                 Organiza casais, contactos, locais, pagamentos, timeline do dia e entregas dos teus casamentos.
               </p>
             </div>
@@ -967,26 +967,26 @@ export default function Page() {
           <div className="flex flex-wrap gap-3">
             <button
               onClick={refreshFromCloud}
-              className="flex min-h-[52px] items-center gap-2 rounded-2xl border border-[#d7e1ea] bg-[#e7edf3] px-4 py-3 text-sm text-[#5f7388] hover:bg-[#d7e1ea] transition-colors"
+              className="flex min-h-[52px] items-center gap-2 rounded-2xl border border-[#dbcbb7] bg-[#efe4d6] px-4 py-3 text-sm text-[#7b6958] hover:bg-[#dbcbb7] transition-colors"
               disabled={isCloudSyncing}
             >
               <Calendar className="h-4 w-4" />
               <span>{isCloudSyncing ? "A atualizar cloud..." : "Atualizar do telemóvel"}</span>
             </button>
-            <div className="flex min-h-[52px] min-w-[220px] flex-col justify-center rounded-2xl border border-[#d7e1ea] bg-[#e7edf3] px-4 py-3 text-sm text-[#5f7388]">
+            <div className="flex min-h-[52px] min-w-[220px] flex-col justify-center rounded-2xl border border-[#dbcbb7] bg-[#efe4d6] px-4 py-3 text-sm text-[#7b6958]">
               <div className="flex items-center gap-2 leading-none">
                 <Calendar className="h-4 w-4" />
                 <span>{weddings.length} eventos registados</span>
               </div>
-              <div className="mt-1 hidden text-xs text-[#1f4e79] font-medium leading-none md:block">
+              <div className="mt-1 hidden text-xs text-[#8c6a43] font-medium leading-none md:block">
                 {syncMode === "cloud" ? "Sync: Cloud" : "Sync: Local"}
               </div>
               {lastSync && (
-                <div className="mt-1 hidden text-[11px] text-[#7d91a6] leading-none md:block">
+                <div className="mt-1 hidden text-[11px] text-[#a08c79] leading-none md:block">
                   Última sync: {lastSync}
                 </div>
               )}
-              <div className="mt-1 hidden max-w-[220px] text-[11px] text-[#7d91a6] leading-tight md:block">
+              <div className="mt-1 hidden max-w-[220px] text-[11px] text-[#a08c79] leading-tight md:block">
                 {syncHint}
               </div>
             </div>
@@ -994,52 +994,52 @@ export default function Page() {
         </div>
 
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          <div className="rounded-[24px] border border-[#d7e1ea] bg-[#ffffff] p-4 shadow-sm">
+          <div className="rounded-[24px] border border-[#dbcbb7] bg-[#fffaf3] p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-[#e7edf3] p-2.5 text-[#1f4e79]">
+              <div className="rounded-2xl bg-[#efe4d6] p-2.5 text-[#8c6a43]">
                 <Heart className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-xs text-[#5f7388] md:text-sm">Casamentos a caminho</p>
-                <p className="text-xl font-bold text-[#16324f] md:text-2xl">{upcomingCount}</p>
+                <p className="text-xs text-[#7b6958] md:text-sm">Casamentos a caminho</p>
+                <p className="text-xl font-bold text-[#3f3125] md:text-2xl">{upcomingCount}</p>
               </div>
             </div>
           </div>
 
-          <div className="rounded-[24px] border border-[#d7e1ea] bg-[#ffffff] p-4 shadow-sm">
+          <div className="rounded-[24px] border border-[#dbcbb7] bg-[#fffaf3] p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-[#e7edf3] p-2.5 text-[#1f4e79]">
+              <div className="rounded-2xl bg-[#efe4d6] p-2.5 text-[#8c6a43]">
                 <Camera className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-xs text-[#5f7388] md:text-sm">Fechados</p>
-                <p className="text-xl font-bold text-[#16324f] md:text-2xl">{confirmedCount}</p>
+                <p className="text-xs text-[#7b6958] md:text-sm">Fechados</p>
+                <p className="text-xl font-bold text-[#3f3125] md:text-2xl">{confirmedCount}</p>
               </div>
             </div>
           </div>
 
-          <div className="rounded-[24px] border border-[#d7e1ea] bg-[#ffffff] p-4 shadow-sm">
+          <div className="rounded-[24px] border border-[#dbcbb7] bg-[#fffaf3] p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-[#e7edf3] p-2.5 text-[#1f4e79]">
+              <div className="rounded-2xl bg-[#efe4d6] p-2.5 text-[#8c6a43]">
                 <Euro className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-xs text-[#5f7388] md:text-sm">Faturação prevista</p>
-                <p className="text-xl font-bold text-[#16324f] md:text-2xl">
+                <p className="text-xs text-[#7b6958] md:text-sm">Faturação prevista</p>
+                <p className="text-xl font-bold text-[#3f3125] md:text-2xl">
                   {revenueTotal.toLocaleString("pt-PT")}€
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="rounded-[24px] border border-[#d7e1ea] bg-[#ffffff] p-4 shadow-sm">
+          <div className="rounded-[24px] border border-[#dbcbb7] bg-[#fffaf3] p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-[#e8f3ec] p-2.5 text-[#2f6b4f]">
+              <div className="rounded-2xl bg-[#eef0e7] p-2.5 text-[#5d6b43]">
                 <Euro className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-xs text-[#5f7388] md:text-sm">Lucro Previsto</p>
-                <p className={`text-xl font-bold md:text-2xl ${profitTotal >= 0 ? "text-[#2f6b4f]" : "text-[#b4534d]"}`}>
+                <p className="text-xs text-[#7b6958] md:text-sm">Lucro Previsto</p>
+                <p className={`text-xl font-bold md:text-2xl ${profitTotal >= 0 ? "text-[#5d6b43]" : "text-[#a75d4d]"}`}>
                   {profitTotal >= 0 ? "+" : ""}{profitTotal.toLocaleString("pt-PT")}€
                 </p>
               </div>
@@ -1047,32 +1047,32 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-[#d7e1ea] bg-[#ffffff] p-6 shadow-sm">
+        <div className="rounded-[28px] border border-[#dbcbb7] bg-[#fffaf3] p-6 shadow-sm">
           <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <h2 className="text-xl font-semibold text-[#16324f]">
+            <h2 className="text-xl font-semibold text-[#3f3125]">
               Calendário Mensal
             </h2>
 
             <div className="flex items-center gap-2">
               <button
                 onClick={() => changeMonth(-1)}
-                className="rounded-2xl border border-[#d7e1ea] bg-[#e7edf3] px-4 py-2 text-sm text-[#5f7388]"
+                className="rounded-2xl border border-[#dbcbb7] bg-[#efe4d6] px-4 py-2 text-sm text-[#7b6958]"
               >
                 ←
               </button>
-              <div className="min-w-[180px] text-center text-sm font-medium capitalize text-[#5f7388]">
+              <div className="min-w-[180px] text-center text-sm font-medium capitalize text-[#7b6958]">
                 {formatMonthYear(currentMonth)}
               </div>
               <button
                 onClick={() => changeMonth(1)}
-                className="rounded-2xl border border-[#d7e1ea] bg-[#e7edf3] px-4 py-2 text-sm text-[#5f7388]"
+                className="rounded-2xl border border-[#dbcbb7] bg-[#efe4d6] px-4 py-2 text-sm text-[#7b6958]"
               >
                 →
               </button>
             </div>
           </div>
 
-          <div className="mb-3 grid grid-cols-7 gap-1 text-center text-[10px] font-semibold uppercase tracking-wide text-[#7d91a6] md:hidden">
+          <div className="mb-3 grid grid-cols-7 gap-1 text-center text-[10px] font-semibold uppercase tracking-wide text-[#a08c79] md:hidden">
             {["S", "T", "Q", "Q", "S", "S", "D"].map((day, index) => (
               <div key={`${day}-${index}`} className="py-1">
                 {day}
@@ -1094,18 +1094,18 @@ export default function Page() {
                 className={`flex min-h-[48px] flex-col items-center justify-center rounded-2xl border px-1 py-2 text-center transition ${
                   day.dayNumber
                     ? day.weddings.length > 0
-                      ? "border-[#b5c7d8] bg-[#e7edf3]"
-                      : "border-[#d7e1ea] bg-[#eef3f8]"
+                      ? "border-[#cdb79c] bg-[#efe4d6]"
+                      : "border-[#dbcbb7] bg-[#f7efe5]"
                     : "border-transparent bg-transparent"
                 }`}
               >
                 {day.dayNumber && (
                   <>
-                    <span className="text-xs font-semibold text-[#16324f]">
+                    <span className="text-xs font-semibold text-[#3f3125]">
                       {day.dayNumber}
                     </span>
                     {day.weddings.length > 0 && (
-                      <span className="mt-1 rounded-full bg-[#1f4e79] px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                      <span className="mt-1 rounded-full bg-[#8c6a43] px-1.5 py-0.5 text-[10px] font-semibold text-white">
                         {day.weddings.length}
                       </span>
                     )}
@@ -1124,11 +1124,11 @@ export default function Page() {
                     setSelectedId(wedding.id);
                     setMobileSection("couple");
                   }}
-                  className="flex w-full items-center justify-between rounded-2xl border border-[#d7e1ea] bg-[#eef3f8] px-4 py-3 text-left"
+                  className="flex w-full items-center justify-between rounded-2xl border border-[#dbcbb7] bg-[#f7efe5] px-4 py-3 text-left"
                 >
                   <div>
-                    <div className="text-sm font-semibold text-[#16324f]">{wedding.couple}</div>
-                    <div className="text-xs text-[#5f7388]">
+                    <div className="text-sm font-semibold text-[#3f3125]">{wedding.couple}</div>
+                    <div className="text-xs text-[#7b6958]">
                       {new Date(wedding.date).toLocaleDateString("pt-PT", {
                         day: "2-digit",
                         month: "2-digit",
@@ -1141,13 +1141,13 @@ export default function Page() {
                 </button>
               ))
             ) : (
-              <div className="rounded-2xl border border-[#d7e1ea] bg-[#eef3f8] px-4 py-3 text-sm text-[#5f7388]">
+              <div className="rounded-2xl border border-[#dbcbb7] bg-[#f7efe5] px-4 py-3 text-sm text-[#7b6958]">
                 Sem casamentos marcados neste mês.
               </div>
             )}
           </div>
 
-          <div className="mb-3 hidden grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-wide text-[#7d91a6] md:grid">
+          <div className="mb-3 hidden grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-wide text-[#a08c79] md:grid">
             {["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"].map((day) => (
               <div key={day} className="py-2">
                 {day}
@@ -1161,13 +1161,13 @@ export default function Page() {
                 key={index}
                 className={`min-h-[110px] rounded-2xl border p-2 ${
                   day.dayNumber
-                    ? "border-[#d7e1ea] bg-[#eef3f8]"
+                    ? "border-[#dbcbb7] bg-[#f7efe5]"
                     : "border-transparent bg-transparent"
                 }`}
               >
                 {day.dayNumber && (
                   <>
-                    <div className="mb-2 text-sm font-semibold text-[#5f7388]">
+                    <div className="mb-2 text-sm font-semibold text-[#7b6958]">
                       {day.dayNumber}
                     </div>
                     <div className="space-y-1">
@@ -1175,13 +1175,13 @@ export default function Page() {
                         <button
                           key={w.id}
                           onClick={() => setSelectedId(w.id)}
-                          className="block w-full rounded-xl bg-[#e7edf3] px-2 py-1 text-left text-[11px] text-[#16324f]"
+                          className="block w-full rounded-xl bg-[#efe4d6] px-2 py-1 text-left text-[11px] text-[#3f3125]"
                         >
                           {w.couple}
                         </button>
                       ))}
                       {day.weddings.length > 2 && (
-                        <div className="text-[11px] text-[#1f4e79]">
+                        <div className="text-[11px] text-[#8c6a43]">
                           +{day.weddings.length - 2} mais
                         </div>
                       )}
@@ -1192,18 +1192,18 @@ export default function Page() {
             ))}
           </div>
 
-          <div className="mt-4 rounded-2xl border border-[#d7e1ea] bg-[#eef3f8] p-4 text-sm text-[#5f7388]">
+          <div className="mt-4 rounded-2xl border border-[#dbcbb7] bg-[#f7efe5] p-4 text-sm text-[#7b6958]">
             <span className="font-semibold">Neste mês:</span> {monthWeddings.length} casamento(s)
           </div>
         </div>
 
-        <div className="sticky top-2 z-20 grid grid-cols-3 gap-2 rounded-[24px] border border-[#d7e1ea] bg-[#f3f6f9]/95 p-2 shadow-sm backdrop-blur xl:hidden">
+        <div className="sticky top-2 z-20 grid grid-cols-3 gap-2 rounded-[24px] border border-[#dbcbb7] bg-[#f6f1ea]/95 p-2 shadow-sm backdrop-blur xl:hidden">
           <button
             onClick={() => setMobileSection("agenda")}
             className={`rounded-2xl px-4 py-3 text-sm font-medium transition ${
               mobileSection === "agenda"
-                ? "bg-[#1f4e79] text-white shadow-sm"
-                : "border border-[#d7e1ea] bg-[#ffffff] text-[#5f7388]"
+                ? "bg-[#8c6a43] text-white shadow-sm"
+                : "border border-[#dbcbb7] bg-[#fffaf3] text-[#7b6958]"
             }`}
           >
             Agenda
@@ -1212,8 +1212,8 @@ export default function Page() {
             onClick={() => setMobileSection("couple")}
             className={`rounded-2xl px-4 py-3 text-sm font-medium transition ${
               mobileSection === "couple"
-                ? "bg-[#1f4e79] text-white shadow-sm"
-                : "border border-[#d7e1ea] bg-[#ffffff] text-[#5f7388]"
+                ? "bg-[#8c6a43] text-white shadow-sm"
+                : "border border-[#dbcbb7] bg-[#fffaf3] text-[#7b6958]"
             }`}
           >
             Casal
@@ -1222,8 +1222,8 @@ export default function Page() {
             onClick={() => setMobileSection("add")}
             className={`rounded-2xl px-4 py-3 text-sm font-medium transition ${
               mobileSection === "add"
-                ? "bg-[#1f4e79] text-white shadow-sm"
-                : "border border-[#d7e1ea] bg-[#ffffff] text-[#5f7388]"
+                ? "bg-[#8c6a43] text-white shadow-sm"
+                : "border border-[#dbcbb7] bg-[#fffaf3] text-[#7b6958]"
             }`}
           >
             Adicionar
@@ -1231,16 +1231,16 @@ export default function Page() {
         </div>
 
         <div className="grid gap-6 xl:grid-cols-[1.05fr_1fr_1.2fr]">
-          <div className={`${mobileSection === "agenda" ? "block" : "hidden"} rounded-[28px] border border-[#d7e1ea] bg-[#ffffff] p-6 shadow-sm xl:block`}>
+          <div className={`${mobileSection === "agenda" ? "block" : "hidden"} rounded-[28px] border border-[#dbcbb7] bg-[#fffaf3] p-6 shadow-sm xl:block`}>
             <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-3">
-                <h2 className="text-xl font-semibold text-[#16324f]">
+                <h2 className="text-xl font-semibold text-[#3f3125]">
                   Agenda de Casamentos
                 </h2>
                 {deletedWedding && (
                   <button
                     onClick={undoDelete}
-                    className="flex items-center rounded-2xl bg-[#1f4e79] px-3 py-1.5 text-xs text-white transition hover:opacity-90"
+                    className="flex items-center rounded-2xl bg-[#8c6a43] px-3 py-1.5 text-xs text-white transition hover:opacity-90"
                   >
                     <RotateCcw className="mr-1 h-3 w-3" />
                     Desfazer
@@ -1250,20 +1250,20 @@ export default function Page() {
 
               <div className="flex flex-wrap items-center gap-2">
                 <div className="relative w-full md:max-w-xs">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1f4e79]" />
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8c6a43]" />
                   <input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Pesquisar casal, quinta, igreja..."
-                    className="w-full rounded-2xl border border-[#d7e1ea] bg-[#ffffff] py-2 pl-9 pr-3 text-[#16324f] outline-none focus:border-[#1f4e79]"
+                    className="w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] py-2 pl-9 pr-3 text-[#3f3125] outline-none focus:border-[#8c6a43]"
                   />
                 </div>
-                <div className="flex items-center gap-2 rounded-2xl border border-[#d7e1ea] bg-[#ffffff] px-3 py-2 text-xs text-[#16324f]">
+                <div className="flex items-center gap-2 rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2 text-xs text-[#3f3125]">
                   <span>Ano:</span>
                   <select
                     value={yearFilter}
                     onChange={(e) => setYearFilter(e.target.value as any)}
-                    className="rounded-md border border-[#d7e1ea] bg-[#ffffff] px-2 py-1 text-xs"
+                    className="rounded-md border border-[#dbcbb7] bg-[#fffaf3] px-2 py-1 text-xs"
                   >
                     <option value="currentNext">Atual + Seguinte</option>
                     <option value="current">Atual</option>
@@ -1286,28 +1286,28 @@ export default function Page() {
                   }}
                   className={`w-full rounded-2xl border p-4 text-left transition hover:shadow-sm ${
                     wedding.checklist.weddingDone
-                      ? "border-[#c7decf] bg-[#e8f3ec]"
+                      ? "border-[#d9ddcf] bg-[#eef0e7]"
                       : selectedId === wedding.id
-                      ? "border-[#1f4e79] bg-[#eef3f8]"
-                      : "border-[#d7e1ea] bg-[#ffffff]"
+                      ? "border-[#8c6a43] bg-[#f7efe5]"
+                      : "border-[#dbcbb7] bg-[#fffaf3]"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-base font-semibold text-[#16324f]">
+                      <p className="text-base font-semibold text-[#3f3125]">
                         {wedding.couple}
                       </p>
-                      <p className="mt-1 text-sm text-[#5f7388]">
+                      <p className="mt-1 text-sm text-[#7b6958]">
                         {wedding.date} • {wedding.venueName || wedding.venue}
                       </p>
-                      <p className="mt-1 text-sm text-[#5f7388]">
+                      <p className="mt-1 text-sm text-[#7b6958]">
                         {wedding.brideName} / {wedding.groomName}
                       </p>
                     </div>
 
                     <div className="flex flex-col gap-2">
                       {wedding.checklist.weddingDone && (
-                        <span className="rounded-full border border-[#c7decf] bg-[#e8f3ec] px-3 py-1 text-xs font-medium text-[#2f6b4f]">
+                        <span className="rounded-full border border-[#d9ddcf] bg-[#eef0e7] px-3 py-1 text-xs font-medium text-[#5d6b43]">
                           Casamento efetuado
                         </span>
                       )}
@@ -1326,9 +1326,9 @@ export default function Page() {
           </div>
 
           <div className={`${mobileSection === "couple" ? "block space-y-4" : "hidden"} xl:block xl:space-y-6`}>
-            <div className="rounded-[28px] border border-[#d7e1ea] bg-[#ffffff] p-6 shadow-sm">
+            <div className="rounded-[28px] border border-[#dbcbb7] bg-[#fffaf3] p-6 shadow-sm">
               <div className="mb-4 flex items-center justify-between gap-3">
-                <h2 className="text-xl font-semibold text-[#16324f]">
+                <h2 className="text-xl font-semibold text-[#3f3125]">
                   Painel do Casal
                 </h2>
 
@@ -1336,14 +1336,14 @@ export default function Page() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={startEditing}
-                      className="flex items-center rounded-2xl bg-[#e7edf3] px-4 py-2 text-sm text-[#5f7388] transition hover:opacity-90"
+                      className="flex items-center rounded-2xl bg-[#efe4d6] px-4 py-2 text-sm text-[#7b6958] transition hover:opacity-90"
                     >
                       <Pencil className="mr-2 h-4 w-4" />
                       Editar
                     </button>
                     <button
                       onClick={() => deleteWedding(selectedWedding.id)}
-                      className="flex items-center rounded-2xl bg-[#b4534d] px-2.5 py-2 text-xs text-white transition hover:opacity-90"
+                      className="flex items-center rounded-2xl bg-[#a75d4d] px-2.5 py-2 text-xs text-white transition hover:opacity-90"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
@@ -1440,14 +1440,14 @@ export default function Page() {
                           <select
                             value={editForm.status}
                             onChange={(e) => updateEditForm("status", e.target.value as WeddingStatus)}
-                            className="w-full appearance-none rounded-2xl border border-[#d7e1ea] bg-[#ffffff] px-3 py-2.5 text-[#16324f] outline-none focus:border-[#1f4e79]"
+                            className="w-full appearance-none rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2.5 text-[#3f3125] outline-none focus:border-[#8c6a43]"
                           >
                             <option>Pendente</option>
                             <option>Confirmado</option>
                             <option>Editado</option>
                             <option>Entregue</option>
                           </select>
-                          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1f4e79]" />
+                          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8c6a43]" />
                         </div>
                         <InputField
                           placeholder="Pack contratado"
@@ -1491,7 +1491,7 @@ export default function Page() {
                         <SectionTitle icon={<Calendar className="h-4 w-4" />} title="Horários combinados" />
                         <div className="space-y-3">
                           <div>
-                            <label className="mb-1 block text-xs font-semibold text-[#5f7388]">Preparação do Noivo</label>
+                            <label className="mb-1 block text-xs font-semibold text-[#7b6958]">Preparação do Noivo</label>
                             <InputField
                               type="time"
                               placeholder="HH:MM"
@@ -1500,7 +1500,7 @@ export default function Page() {
                             />
                           </div>
                           <div>
-                            <label className="mb-1 block text-xs font-semibold text-[#5f7388]">Preparação da Noiva</label>
+                            <label className="mb-1 block text-xs font-semibold text-[#7b6958]">Preparação da Noiva</label>
                             <InputField
                               type="time"
                               placeholder="HH:MM"
@@ -1509,7 +1509,7 @@ export default function Page() {
                             />
                           </div>
                           <div>
-                            <label className="mb-1 block text-xs font-semibold text-[#5f7388]">Cerimónia</label>
+                            <label className="mb-1 block text-xs font-semibold text-[#7b6958]">Cerimónia</label>
                             <InputField
                               type="time"
                               placeholder="HH:MM"
@@ -1528,7 +1528,7 @@ export default function Page() {
                           placeholder="Notas"
                           value={editForm.notes}
                           onChange={(e) => updateEditForm("notes", e.target.value)}
-                          className="min-h-[120px] w-full rounded-2xl border border-[#d7e1ea] bg-[#ffffff] px-3 py-2.5 text-[#16324f] outline-none transition focus:border-[#1f4e79]"
+                          className="min-h-[120px] w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2.5 text-[#3f3125] outline-none transition focus:border-[#8c6a43]"
                         />
                       </div>
                     </div>
@@ -1536,7 +1536,7 @@ export default function Page() {
                     <div className="flex flex-wrap gap-2 pt-2">
                       <button
                         onClick={saveEdit}
-                        className="flex items-center rounded-2xl bg-[#1f4e79] px-4 py-3 text-white transition hover:opacity-90"
+                        className="flex items-center rounded-2xl bg-[#8c6a43] px-4 py-3 text-white transition hover:opacity-90"
                       >
                         <Save className="mr-2 h-4 w-4" />
                         Guardar alterações
@@ -1544,7 +1544,7 @@ export default function Page() {
 
                       <button
                         onClick={cancelEdit}
-                        className="flex items-center rounded-2xl bg-[#e7edf3] px-4 py-3 text-[#5f7388] transition hover:opacity-90"
+                        className="flex items-center rounded-2xl bg-[#efe4d6] px-4 py-3 text-[#7b6958] transition hover:opacity-90"
                       >
                         <RotateCcw className="mr-2 h-4 w-4" />
                         Cancelar
@@ -1555,10 +1555,10 @@ export default function Page() {
                   <div className="space-y-5">
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <h3 className="text-2xl font-bold text-[#16324f]">
+                        <h3 className="text-2xl font-bold text-[#3f3125]">
                           {selectedWedding.couple}
                         </h3>
-                        <p className="mt-1 text-sm text-[#5f7388]">
+                        <p className="mt-1 text-sm text-[#7b6958]">
                           {selectedWedding.date}
                         </p>
                       </div>
@@ -1572,25 +1572,25 @@ export default function Page() {
                       </span>
                     </div>
 
-                    <div className="rounded-2xl bg-[#eef3f8] p-4">
+                    <div className="rounded-2xl bg-[#f7efe5] p-4">
                       <SectionTitle icon={<Users className="h-4 w-4" />} title="Contactos dos noivos" />
-                      <div className="space-y-3 text-sm text-[#16324f]">
+                      <div className="space-y-3 text-sm text-[#3f3125]">
                         <div>
-                          <div className="font-medium text-[#16324f]">Noiva: {selectedWedding.brideName || "—"}</div>
+                          <div className="font-medium text-[#3f3125]">Noiva: {selectedWedding.brideName || "—"}</div>
                           <div className="mt-1 flex items-center gap-2"><Phone className="h-4 w-4" /> {selectedWedding.bridePhone || "—"}</div>
                           <div className="mt-1 flex items-center gap-2"><Mail className="h-4 w-4" /> {selectedWedding.brideEmail || "—"}</div>
                         </div>
                         <div>
-                          <div className="font-medium text-[#16324f]">Noivo: {selectedWedding.groomName || "—"}</div>
+                          <div className="font-medium text-[#3f3125]">Noivo: {selectedWedding.groomName || "—"}</div>
                           <div className="mt-1 flex items-center gap-2"><Phone className="h-4 w-4" /> {selectedWedding.groomPhone || "—"}</div>
                           <div className="mt-1 flex items-center gap-2"><Mail className="h-4 w-4" /> {selectedWedding.groomEmail || "—"}</div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="rounded-2xl bg-[#eef3f8] p-4">
+                    <div className="rounded-2xl bg-[#f7efe5] p-4">
                       <SectionTitle icon={<Church className="h-4 w-4" />} title="Locais do casamento" />
-                      <div className="space-y-2 text-sm text-[#16324f]">
+                      <div className="space-y-2 text-sm text-[#3f3125]">
                         <div className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Quinta: {selectedWedding.venueName || "—"}</div>
                         <div className="flex items-center gap-2"><Church className="h-4 w-4" /> Igreja: {selectedWedding.churchLocation || "—"}</div>
                         <div className="flex items-center gap-2"><Home className="h-4 w-4" /> Preparação noiva: {selectedWedding.bridePrepLocation || "—"}</div>
@@ -1598,63 +1598,63 @@ export default function Page() {
                       </div>
                     </div>
 
-                    <div className="rounded-2xl bg-[#eef3f8] p-4">
+                    <div className="rounded-2xl bg-[#f7efe5] p-4">
                       <SectionTitle icon={<Calendar className="h-4 w-4" />} title="Horários combinados" />
-                      <div className="space-y-2 text-sm text-[#16324f]">
+                      <div className="space-y-2 text-sm text-[#3f3125]">
                         <div className="flex items-center gap-2"><Clock className="h-4 w-4" /> Prep. noivo: {selectedWedding.groomPrepTime || "—"}</div>
                         <div className="flex items-center gap-2"><Clock className="h-4 w-4" /> Prep. noiva: {selectedWedding.bridePrepTime || "—"}</div>
                         <div className="flex items-center gap-2"><Clock className="h-4 w-4" /> Cerimónia: {selectedWedding.ceremony || "—"}</div>
                       </div>
                     </div>
 
-                    <div className="rounded-2xl bg-[#eef3f8] p-4">
+                    <div className="rounded-2xl bg-[#f7efe5] p-4">
                       <SectionTitle icon={<Camera className="h-4 w-4" />} title="Serviço" />
-                      <div className="space-y-2 text-sm text-[#16324f]">
+                      <div className="space-y-2 text-sm text-[#3f3125]">
                         <div className="flex items-center gap-2"><Camera className="h-4 w-4" /> Pack: {selectedWedding.package || "—"}</div>
                         <div className="flex items-center gap-2"><Video className="h-4 w-4" /> Tipo de entrega: {selectedWedding.delivery || "—"}</div>
                       </div>
                     </div>
 
-                    <div className="rounded-2xl bg-[#eef3f8] p-4">
+                    <div className="rounded-2xl bg-[#f7efe5] p-4">
                       <SectionTitle icon={<Euro className="h-4 w-4" />} title="Financeiro" />
-                      <div className="space-y-2 text-sm text-[#16324f]">
+                      <div className="space-y-2 text-sm text-[#3f3125]">
                         <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Total: {selectedWedding.total || "—"}</div>
                         <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Sinal: {selectedWedding.signal || "—"}</div>
                         <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Falta pagar: {selectedWedding.balance || "—"}</div>
                       </div>
                     </div>
 
-                    <div className="rounded-2xl bg-[#eef3f8] p-4">
+                    <div className="rounded-2xl bg-[#f7efe5] p-4">
                       <SectionTitle icon={<Euro className="h-4 w-4" />} title="Custos Internos" />
-                      <div className="space-y-2 text-sm text-[#16324f]">
+                      <div className="space-y-2 text-sm text-[#3f3125]">
                         <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Custos da equipa: {selectedWedding.teamCosts || "—"}</div>
                         <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Custos laboratório: {selectedWedding.laboratoryCosts || "—"}</div>
                         <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Custos extras: {selectedWedding.extraCosts || "—"}</div>
                       </div>
                     </div>
 
-                    <div className="rounded-2xl bg-[#eef3f8] p-4">
-                      <div className="mb-2 flex items-center gap-2 text-sm font-medium text-[#5f7388]">
+                    <div className="rounded-2xl bg-[#f7efe5] p-4">
+                      <div className="mb-2 flex items-center gap-2 text-sm font-medium text-[#7b6958]">
                         <FileText className="h-4 w-4" />
                         Notas
                       </div>
-                      <p className="text-sm leading-6 text-[#425d78]">
+                      <p className="text-sm leading-6 text-[#5e4a3a]">
                         {selectedWedding.notes || "Sem notas."}
                       </p>
                     </div>
                   </div>
                 )
               ) : (
-                <p className="text-sm text-[#5f7388]">Seleciona um casamento.</p>
+                <p className="text-sm text-[#7b6958]">Seleciona um casamento.</p>
               )}
             </div>
 
-            <div className="rounded-[28px] border border-[#d7e1ea] bg-[#ffffff] p-6 shadow-sm">
+            <div className="rounded-[28px] border border-[#dbcbb7] bg-[#fffaf3] p-6 shadow-sm">
               <div className="mb-4 flex items-center justify-between gap-3">
-                <h2 className="text-xl font-semibold text-[#16324f]">
+                <h2 className="text-xl font-semibold text-[#3f3125]">
                   Checklist do Casal
                 </h2>
-                <div className="rounded-2xl bg-[#e7edf3] px-3 py-2 text-sm text-[#5f7388]">
+                <div className="rounded-2xl bg-[#efe4d6] px-3 py-2 text-sm text-[#7b6958]">
                   {checklistDoneCount}/{checklistLabels.length}
                 </div>
               </div>
@@ -1669,13 +1669,13 @@ export default function Page() {
                         onClick={() => toggleChecklistItem(item.key)}
                         className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition ${
                           checked
-                            ? "border-[#b5c7d8] bg-[#e7edf3] text-[#16324f]"
-                            : "border-[#d7e1ea] bg-[#eef3f8] text-[#5f7388]"
+                            ? "border-[#cdb79c] bg-[#efe4d6] text-[#3f3125]"
+                            : "border-[#dbcbb7] bg-[#f7efe5] text-[#7b6958]"
                         }`}
                       >
                         <CheckSquare
                           className={`h-5 w-5 ${
-                            checked ? "text-[#1f4e79]" : "text-[#b5c7d8]"
+                            checked ? "text-[#8c6a43]" : "text-[#cdb79c]"
                           }`}
                         />
                         <span className="text-sm font-medium">{item.label}</span>
@@ -1684,13 +1684,13 @@ export default function Page() {
                   })}
                 </div>
               ) : (
-                <p className="text-sm text-[#5f7388]">Seleciona um casamento para ver a checklist.</p>
+                <p className="text-sm text-[#7b6958]">Seleciona um casamento para ver a checklist.</p>
               )}
             </div>
           </div>
 
-          <div className={`${mobileSection === "add" ? "block" : "hidden"} rounded-[28px] border border-[#d7e1ea] bg-[#ffffff] p-6 shadow-sm xl:block`}>
-            <h2 className="mb-4 text-xl font-semibold text-[#16324f]">
+          <div className={`${mobileSection === "add" ? "block" : "hidden"} rounded-[28px] border border-[#dbcbb7] bg-[#fffaf3] p-6 shadow-sm xl:block`}>
+            <h2 className="mb-4 text-xl font-semibold text-[#3f3125]">
               Adicionar Casamento
             </h2>
 
@@ -1781,14 +1781,14 @@ export default function Page() {
                     <select
                       value={form.status}
                       onChange={(e) => updateForm("status", e.target.value as WeddingStatus)}
-                      className="w-full appearance-none rounded-2xl border border-[#d7e1ea] bg-[#ffffff] px-3 py-2.5 text-[#16324f] outline-none focus:border-[#1f4e79]"
+                      className="w-full appearance-none rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2.5 text-[#3f3125] outline-none focus:border-[#8c6a43]"
                     >
                       <option>Pendente</option>
                       <option>Confirmado</option>
                       <option>Editado</option>
                       <option>Entregue</option>
                     </select>
-                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1f4e79]" />
+                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8c6a43]" />
                   </div>
                   <InputField
                     placeholder="Pack contratado"
@@ -1833,7 +1833,7 @@ export default function Page() {
                     <SectionTitle icon={<Calendar className="h-4 w-4" />} title="Horários combinados" />
                     <div className="space-y-3">
                       <div>
-                        <label className="mb-1 block text-xs font-semibold text-[#5f7388]">Preparação do Noivo</label>
+                        <label className="mb-1 block text-xs font-semibold text-[#7b6958]">Preparação do Noivo</label>
                         <InputField
                           type="time"
                           placeholder="HH:MM"
@@ -1842,7 +1842,7 @@ export default function Page() {
                         />
                       </div>
                       <div>
-                        <label className="mb-1 block text-xs font-semibold text-[#5f7388]">Preparação da Noiva</label>
+                        <label className="mb-1 block text-xs font-semibold text-[#7b6958]">Preparação da Noiva</label>
                         <InputField
                           type="time"
                           placeholder="HH:MM"
@@ -1851,7 +1851,7 @@ export default function Page() {
                         />
                       </div>
                       <div>
-                        <label className="mb-1 block text-xs font-semibold text-[#5f7388]">Cerimónia</label>
+                        <label className="mb-1 block text-xs font-semibold text-[#7b6958]">Cerimónia</label>
                         <InputField
                           type="time"
                           placeholder="HH:MM"
@@ -1876,7 +1876,7 @@ export default function Page() {
                       placeholder="Notas importantes"
                       value={form.notes}
                       onChange={(e) => updateForm("notes", e.target.value)}
-                      className="min-h-[120px] w-full rounded-2xl border border-[#d7e1ea] bg-[#ffffff] px-3 py-2.5 text-[#16324f] outline-none transition focus:border-[#1f4e79]"
+                      className="min-h-[120px] w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2.5 text-[#3f3125] outline-none transition focus:border-[#8c6a43]"
                     />
                   </div>
                 </div>
@@ -1884,7 +1884,7 @@ export default function Page() {
 
               <button
                 onClick={addWedding}
-                className="flex w-full items-center justify-center rounded-2xl bg-[#1f4e79] px-4 py-3 text-white transition hover:opacity-90"
+                className="flex w-full items-center justify-center rounded-2xl bg-[#8c6a43] px-4 py-3 text-white transition hover:opacity-90"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Adicionar casamento
