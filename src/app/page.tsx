@@ -1197,12 +1197,12 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-2 xl:hidden">
+        <div className="sticky top-2 z-20 grid grid-cols-3 gap-2 rounded-[24px] border border-[#bfdbfe] bg-[#f0f5ff]/95 p-2 shadow-sm backdrop-blur xl:hidden">
           <button
             onClick={() => setMobileSection("agenda")}
             className={`rounded-2xl px-4 py-3 text-sm font-medium transition ${
               mobileSection === "agenda"
-                ? "bg-[#2563eb] text-white"
+                ? "bg-[#2563eb] text-white shadow-sm"
                 : "border border-[#bfdbfe] bg-[#f5f9ff] text-[#4b7abf]"
             }`}
           >
@@ -1212,7 +1212,7 @@ export default function Page() {
             onClick={() => setMobileSection("couple")}
             className={`rounded-2xl px-4 py-3 text-sm font-medium transition ${
               mobileSection === "couple"
-                ? "bg-[#2563eb] text-white"
+                ? "bg-[#2563eb] text-white shadow-sm"
                 : "border border-[#bfdbfe] bg-[#f5f9ff] text-[#4b7abf]"
             }`}
           >
@@ -1222,7 +1222,7 @@ export default function Page() {
             onClick={() => setMobileSection("add")}
             className={`rounded-2xl px-4 py-3 text-sm font-medium transition ${
               mobileSection === "add"
-                ? "bg-[#2563eb] text-white"
+                ? "bg-[#2563eb] text-white shadow-sm"
                 : "border border-[#bfdbfe] bg-[#f5f9ff] text-[#4b7abf]"
             }`}
           >
@@ -1325,7 +1325,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className={`${mobileSection === "couple" ? "block space-y-6" : "hidden"} xl:block xl:space-y-6`}>
+          <div className={`${mobileSection === "couple" ? "block space-y-4" : "hidden"} xl:block xl:space-y-6`}>
             <div className="rounded-[28px] border border-[#bfdbfe] bg-[#f5f9ff] p-6 shadow-sm">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <h2 className="text-xl font-semibold text-[#1e3a5f]">
