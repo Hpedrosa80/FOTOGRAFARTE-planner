@@ -184,8 +184,9 @@ const defaultWeddings: Wedding[] = [
 const STORAGE_KEY = "fotografarte-weddings-v4";
 const SYNC_ROW_ID = "main";
 
-function parseMoneyValue(value: string) {
-  const sanitized = value.replace(/[^\d,.-]/g, "").replace(/,/g, ".");
+function parseMoneyValue(value: unknown) {
+  const normalizedValue = typeof value === "string" ? value : "";
+  const sanitized = normalizedValue.replace(/[^\d,.-]/g, "").replace(/,/g, ".");
   const parsed = Number.parseFloat(sanitized);
   return Number.isFinite(parsed) ? parsed : 0;
 }
@@ -210,6 +211,9 @@ function calculateBalance(total: string, signal: string, secondSignal: string) {
 function normalizeWeddings(list: Wedding[]) {
   return list.map((w) => ({
     ...w,
+    total: w.total || "",
+    signal: w.signal || "",
+    secondSignal: w.secondSignal || "",
     balance: calculateBalance(w.total || "", w.signal || "", w.secondSignal || ""),
     checklist: { ...emptyChecklist, ...(w.checklist || {}) },
   }));
