@@ -965,26 +965,26 @@ export default function Page() {
           <div className="flex flex-wrap gap-3">
             <button
               onClick={refreshFromCloud}
-              className="flex items-center gap-2 rounded-2xl border border-[#bfdbfe] bg-[#dbeafe] px-4 py-3 text-sm text-[#4b7abf] hover:bg-[#bfdbfe] transition-colors"
+              className="flex min-h-[52px] items-center gap-2 rounded-2xl border border-[#bfdbfe] bg-[#dbeafe] px-4 py-3 text-sm text-[#4b7abf] hover:bg-[#bfdbfe] transition-colors"
               disabled={isCloudSyncing}
             >
               <Calendar className="h-4 w-4" />
               <span>{isCloudSyncing ? "A atualizar cloud..." : "Atualizar do telemóvel"}</span>
             </button>
-            <div className="flex min-h-[52px] flex-col justify-center rounded-2xl border border-[#bfdbfe] bg-[#dbeafe] px-4 py-3 text-sm text-[#4b7abf]">
+            <div className="flex min-h-[52px] min-w-[220px] flex-col justify-center rounded-2xl border border-[#bfdbfe] bg-[#dbeafe] px-4 py-3 text-sm text-[#4b7abf]">
               <div className="flex items-center gap-2 leading-none">
                 <Calendar className="h-4 w-4" />
                 <span>{weddings.length} eventos registados</span>
               </div>
-              <div className="mt-1 text-xs text-[#2563eb] font-medium leading-none">
+              <div className="mt-1 hidden text-xs text-[#2563eb] font-medium leading-none md:block">
                 {syncMode === "cloud" ? "Sync: Cloud" : "Sync: Local"}
               </div>
               {lastSync && (
-                <div className="mt-1 text-[11px] text-[#6b9fd4] leading-none">
+                <div className="mt-1 hidden text-[11px] text-[#6b9fd4] leading-none md:block">
                   Última sync: {lastSync}
                 </div>
               )}
-              <div className="mt-1 max-w-[220px] text-[11px] text-[#6b9fd4] leading-tight">
+              <div className="mt-1 hidden max-w-[220px] text-[11px] text-[#6b9fd4] leading-tight md:block">
                 {syncHint}
               </div>
             </div>
