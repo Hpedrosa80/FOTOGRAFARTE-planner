@@ -64,6 +64,7 @@ type Wedding = {
   total: string;
   signal: string;
   secondSignal: string;
+  thirdSignal: string;
   balance: string;
   ceremony: string;
   bridePrepTime: string;
@@ -125,6 +126,7 @@ const defaultWeddings: Wedding[] = [
     total: "2500€",
     signal: "750€",
     secondSignal: "750€",
+    thirdSignal: "0€",
     balance: "1000€",
     ceremony: "15:00",
     bridePrepTime: "09:30",
@@ -164,6 +166,7 @@ const defaultWeddings: Wedding[] = [
     total: "1800€",
     signal: "500€",
     secondSignal: "",
+    thirdSignal: "",
     balance: "1300€",
     ceremony: "16:30",
     bridePrepTime: "10:00",
@@ -203,8 +206,17 @@ function formatMoneyValue(value: number) {
   return `${formatted}€`;
 }
 
-function calculateBalance(total: string, signal: string, secondSignal: string) {
-  const remaining = parseMoneyValue(total) - parseMoneyValue(signal) - parseMoneyValue(secondSignal);
+function calculateBalance(
+  total: string,
+  signal: string,
+  secondSignal: string,
+  thirdSignal: string
+) {
+  const remaining =
+    parseMoneyValue(total) -
+    parseMoneyValue(signal) -
+    parseMoneyValue(secondSignal) -
+    parseMoneyValue(thirdSignal);
   return formatMoneyValue(Math.max(remaining, 0));
 }
 
@@ -214,7 +226,13 @@ function normalizeWeddings(list: Wedding[]) {
     total: w.total || "",
     signal: w.signal || "",
     secondSignal: w.secondSignal || "",
-    balance: calculateBalance(w.total || "", w.signal || "", w.secondSignal || ""),
+    thirdSignal: w.thirdSignal || "",
+    balance: calculateBalance(
+      w.total || "",
+      w.signal || "",
+      w.secondSignal || "",
+      w.thirdSignal || ""
+    ),
     checklist: { ...emptyChecklist, ...(w.checklist || {}) },
   }));
 }
@@ -240,6 +258,7 @@ const emptyForm: Omit<Wedding, "id"> = {
   total: "",
   signal: "",
   secondSignal: "",
+  thirdSignal: "",
   balance: "",
   ceremony: "",
   bridePrepTime: "",
@@ -265,12 +284,14 @@ function InputField({
   placeholder,
   type = "text",
   readOnly = false,
+  className = "",
 }: {
   value: string;
   onChange: (value: string) => void;
   placeholder: string;
   type?: string;
   readOnly?: boolean;
+  className?: string;
 }) {
   return (
     <input
@@ -279,8 +300,46 @@ function InputField({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       readOnly={readOnly}
-      className="w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2.5 text-[#3f3125] outline-none transition focus:border-[#8c6a43]"
+      className={`w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2.5 text-sm text-[#3f3125] outline-none transition placeholder:text-xs placeholder:text-[#9c8974] focus:border-[#8c6a43] ${className}`}
     />
+  );
+}
+
+function FinanceInputCard({
+  label,
+  value,
+  onChange,
+  readOnly = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  readOnly?: boolean;
+}) {
+  return (
+    <div className="rounded-2xl border border-[#dbcbb7] bg-[#f7efe5] p-2.5">
+      <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8c6a43]">
+        {label}
+      </label>
+      <InputField
+        placeholder={label}
+        value={value}
+        onChange={onChange}
+        readOnly={readOnly}
+        className="bg-white px-2.5 py-2 text-xs"
+      />
+    </div>
+  );
+}
+
+function FinanceSummaryCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] p-3">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8c6a43]">
+        {label}
+      </div>
+      <div className="mt-1 text-sm font-medium text-[#3f3125]">{value || "—"}</div>
+    </div>
   );
 }
 
@@ -734,8 +793,18 @@ export default function Page() {
   ) => {
     const next = { ...current, [key]: value };
 
-    if (key === "total" || key === "signal" || key === "secondSignal") {
-      next.balance = calculateBalance(next.total, next.signal, next.secondSignal);
+    if (
+      key === "total" ||
+      key === "signal" ||
+      key === "secondSignal" ||
+      key === "thirdSignal"
+    ) {
+      next.balance = calculateBalance(
+        next.total,
+        next.signal,
+        next.secondSignal,
+        next.thirdSignal
+      );
     }
 
     return next;
@@ -771,7 +840,12 @@ export default function Page() {
 
     const newWedding: Wedding = {
       ...form,
-      balance: calculateBalance(form.total, form.signal, form.secondSignal),
+      balance: calculateBalance(
+        form.total,
+        form.signal,
+        form.secondSignal,
+        form.thirdSignal
+      ),
       phone: form.bridePhone || form.groomPhone,
       email: form.brideEmail || form.groomEmail,
       venue: form.venueName || form.venue,
@@ -824,7 +898,12 @@ export default function Page() {
 
     const normalizedEdit = {
       ...editForm,
-      balance: calculateBalance(editForm.total, editForm.signal, editForm.secondSignal),
+      balance: calculateBalance(
+        editForm.total,
+        editForm.signal,
+        editForm.secondSignal,
+        editForm.thirdSignal
+      ),
       phone: editForm.bridePhone || editForm.groomPhone,
       email: editForm.brideEmail || editForm.groomEmail,
       venue: editForm.venueName || editForm.venue,
@@ -926,6 +1005,8 @@ export default function Page() {
                 package: "",
                 total: "",
                 signal: "",
+                secondSignal: "",
+                thirdSignal: "",
                 balance: "",
                 delivery: "",
                 teamCosts: "",
@@ -1515,44 +1596,47 @@ export default function Page() {
                           value={editForm.package}
                           onChange={(value) => updateEditForm("package", value)}
                         />
-                        <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-                          <InputField
-                            placeholder="Total"
+                        <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+                          <FinanceInputCard
+                            label="Total serviço"
                             value={editForm.total}
                             onChange={(value) => updateEditForm("total", value)}
                           />
-                          <InputField
-                            placeholder="Sinal"
+                          <FinanceInputCard
+                            label="1 sinal"
                             value={editForm.signal}
                             onChange={(value) => updateEditForm("signal", value)}
                           />
-                          <InputField
-                            placeholder="Segundo sinal"
+                          <FinanceInputCard
+                            label="2 sinal"
                             value={editForm.secondSignal}
                             onChange={(value) => updateEditForm("secondSignal", value)}
                           />
-                          <InputField
-                            placeholder="Falta pagar"
-                            value={editForm.balance}
-                            onChange={() => {}}
-                            readOnly
+                          <FinanceInputCard
+                            label="3 sinal"
+                            value={editForm.thirdSignal}
+                            onChange={(value) => updateEditForm("thirdSignal", value)}
                           />
-                        </div>
-                        <div className="grid grid-cols-3 gap-2">
-                          <InputField
-                            placeholder="Custos da equipa"
+                          <FinanceInputCard
+                            label="Freelancers"
                             value={editForm.teamCosts}
                             onChange={(value) => updateEditForm("teamCosts", value)}
                           />
-                          <InputField
-                            placeholder="Custos laboratorio"
+                          <FinanceInputCard
+                            label="Laboratorio"
                             value={editForm.laboratoryCosts}
                             onChange={(value) => updateEditForm("laboratoryCosts", value)}
                           />
-                          <InputField
-                            placeholder="Custos extras"
+                          <FinanceInputCard
+                            label="Extras"
                             value={editForm.extraCosts}
                             onChange={(value) => updateEditForm("extraCosts", value)}
+                          />
+                          <FinanceInputCard
+                            label="Falta pagar"
+                            value={editForm.balance}
+                            onChange={() => {}}
+                            readOnly
                           />
                         </div>
                         <SectionTitle icon={<Calendar className="h-4 w-4" />} title="Horários combinados" />
@@ -1684,20 +1768,15 @@ export default function Page() {
 
                     <div className="rounded-2xl bg-[#f7efe5] p-4">
                       <SectionTitle icon={<Euro className="h-4 w-4" />} title="Financeiro" />
-                      <div className="space-y-2 text-sm text-[#3f3125]">
-                        <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Total: {selectedWedding.total || "—"}</div>
-                        <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Sinal: {selectedWedding.signal || "—"}</div>
-                        <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Segundo sinal: {selectedWedding.secondSignal || "—"}</div>
-                        <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Falta pagar: {selectedWedding.balance || "—"}</div>
-                      </div>
-                    </div>
-
-                    <div className="rounded-2xl bg-[#f7efe5] p-4">
-                      <SectionTitle icon={<Euro className="h-4 w-4" />} title="Custos Internos" />
-                      <div className="space-y-2 text-sm text-[#3f3125]">
-                        <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Custos da equipa: {selectedWedding.teamCosts || "—"}</div>
-                        <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Custos laboratório: {selectedWedding.laboratoryCosts || "—"}</div>
-                        <div className="flex items-center gap-2"><Euro className="h-4 w-4" /> Custos extras: {selectedWedding.extraCosts || "—"}</div>
+                      <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+                        <FinanceSummaryCard label="Total serviço" value={selectedWedding.total} />
+                        <FinanceSummaryCard label="1 sinal" value={selectedWedding.signal} />
+                        <FinanceSummaryCard label="2 sinal" value={selectedWedding.secondSignal} />
+                        <FinanceSummaryCard label="3 sinal" value={selectedWedding.thirdSignal} />
+                        <FinanceSummaryCard label="Freelancers" value={selectedWedding.teamCosts} />
+                        <FinanceSummaryCard label="Laboratorio" value={selectedWedding.laboratoryCosts} />
+                        <FinanceSummaryCard label="Extras" value={selectedWedding.extraCosts} />
+                        <FinanceSummaryCard label="Falta pagar" value={selectedWedding.balance} />
                       </div>
                     </div>
 
@@ -1871,44 +1950,47 @@ export default function Page() {
                     value={form.package}
                     onChange={(value) => updateForm("package", value)}
                   />
-                  <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-                    <InputField
-                      placeholder="Total"
+                  <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+                    <FinanceInputCard
+                      label="Total serviço"
                       value={form.total}
                       onChange={(value) => updateForm("total", value)}
                     />
-                    <InputField
-                      placeholder="Sinal"
+                    <FinanceInputCard
+                      label="1 sinal"
                       value={form.signal}
                       onChange={(value) => updateForm("signal", value)}
                     />
-                    <InputField
-                      placeholder="Segundo sinal"
+                    <FinanceInputCard
+                      label="2 sinal"
                       value={form.secondSignal}
                       onChange={(value) => updateForm("secondSignal", value)}
                     />
-                    <InputField
-                      placeholder="Falta pagar"
-                      value={form.balance}
-                      onChange={() => {}}
-                      readOnly
+                    <FinanceInputCard
+                      label="3 sinal"
+                      value={form.thirdSignal}
+                      onChange={(value) => updateForm("thirdSignal", value)}
                     />
-                  </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    <InputField
-                      placeholder="Custos da equipa"
+                    <FinanceInputCard
+                      label="Freelancers"
                       value={form.teamCosts}
                       onChange={(value) => updateForm("teamCosts", value)}
                     />
-                    <InputField
-                      placeholder="Custos laboratorio"
+                    <FinanceInputCard
+                      label="Laboratorio"
                       value={form.laboratoryCosts}
                       onChange={(value) => updateForm("laboratoryCosts", value)}
                     />
-                    <InputField
-                      placeholder="Custos extras"
+                    <FinanceInputCard
+                      label="Extras"
                       value={form.extraCosts}
                       onChange={(value) => updateForm("extraCosts", value)}
+                    />
+                    <FinanceInputCard
+                      label="Falta pagar"
+                      value={form.balance}
+                      onChange={() => {}}
+                      readOnly
                     />
                   </div>
                   <div>
