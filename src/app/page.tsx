@@ -1070,7 +1070,79 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="mb-3 grid grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-wide text-[#6b9fd4]">
+          <div className="mb-3 grid grid-cols-7 gap-1 text-center text-[10px] font-semibold uppercase tracking-wide text-[#6b9fd4] md:hidden">
+            {["S", "T", "Q", "Q", "S", "S", "D"].map((day, index) => (
+              <div key={`${day}-${index}`} className="py-1">
+                {day}
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-7 gap-1 md:hidden">
+            {calendarDays.map((day, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => {
+                  if (day.weddings[0]) {
+                    setSelectedId(day.weddings[0].id);
+                  }
+                }}
+                disabled={!day.dayNumber}
+                className={`flex min-h-[48px] flex-col items-center justify-center rounded-2xl border px-1 py-2 text-center transition ${
+                  day.dayNumber
+                    ? day.weddings.length > 0
+                      ? "border-[#93c5fd] bg-[#dbeafe]"
+                      : "border-[#bfdbfe] bg-[#eef3fb]"
+                    : "border-transparent bg-transparent"
+                }`}
+              >
+                {day.dayNumber && (
+                  <>
+                    <span className="text-xs font-semibold text-[#1e3a5f]">
+                      {day.dayNumber}
+                    </span>
+                    {day.weddings.length > 0 && (
+                      <span className="mt-1 rounded-full bg-[#2563eb] px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                        {day.weddings.length}
+                      </span>
+                    )}
+                  </>
+                )}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-4 space-y-2 md:hidden">
+            {monthWeddings.length > 0 ? (
+              monthWeddings.map((wedding) => (
+                <button
+                  key={wedding.id}
+                  onClick={() => setSelectedId(wedding.id)}
+                  className="flex w-full items-center justify-between rounded-2xl border border-[#bfdbfe] bg-[#eef3fb] px-4 py-3 text-left"
+                >
+                  <div>
+                    <div className="text-sm font-semibold text-[#1e3a5f]">{wedding.couple}</div>
+                    <div className="text-xs text-[#4b7abf]">
+                      {new Date(wedding.date).toLocaleDateString("pt-PT", {
+                        day: "2-digit",
+                        month: "2-digit",
+                      })} • {wedding.venueName || wedding.venue}
+                    </div>
+                  </div>
+                  <span className={`rounded-full border px-2 py-1 text-[10px] font-medium ${statusStyles[wedding.status]}`}>
+                    {wedding.status}
+                  </span>
+                </button>
+              ))
+            ) : (
+              <div className="rounded-2xl border border-[#bfdbfe] bg-[#eef3fb] px-4 py-3 text-sm text-[#4b7abf]">
+                Sem casamentos marcados neste mês.
+              </div>
+            )}
+          </div>
+
+          <div className="mb-3 hidden grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-wide text-[#6b9fd4] md:grid">
             {["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"].map((day) => (
               <div key={day} className="py-2">
                 {day}
@@ -1078,7 +1150,7 @@ export default function Page() {
             ))}
           </div>
 
-          <div className="grid grid-cols-7 gap-2">
+          <div className="hidden grid-cols-7 gap-2 md:grid">
             {calendarDays.map((day, index) => (
               <div
                 key={index}
