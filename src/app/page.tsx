@@ -90,6 +90,14 @@ const checklistLabels: { key: ChecklistKey; label: string }[] = [
   { key: "galleryDelivered", label: "Galeria entregue" },
 ];
 
+const packOptions = [
+  "Pack 1 foto",
+  "Pack 2 foto",
+  "Pack 3 foto",
+  "Pack 1 video",
+  "Pack 2 video",
+];
+
 const emptyChecklist: WeddingChecklist = {
   contractSigned: false,
   signalReceived: false,
@@ -339,6 +347,69 @@ function FinanceSummaryCard({ label, value }: { label: string; value: string }) 
         {label}
       </div>
       <div className="mt-1 text-sm font-medium text-[#3f3125]">{value || "—"}</div>
+    </div>
+  );
+}
+
+function getSelectedPacks(value: string) {
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function togglePackSelection(currentValue: string, packLabel: string) {
+  const selectedPacks = getSelectedPacks(currentValue);
+  const nextSelection = selectedPacks.includes(packLabel)
+    ? selectedPacks.filter((item) => item !== packLabel)
+    : [...selectedPacks, packLabel];
+
+  return nextSelection.join(", ");
+}
+
+function PackageSelector({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const selectedPacks = getSelectedPacks(value);
+  const hasCustomValue = value.trim().length > 0 && selectedPacks.length === 0;
+
+  return (
+    <div className="rounded-2xl border border-[#dbcbb7] bg-[#f7efe5] p-3">
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <label className="text-xs font-semibold uppercase tracking-[0.08em] text-[#8c6a43]">
+          Pack contratado
+        </label>
+        <span className="text-[11px] text-[#7b6958]">Escolha múltipla</span>
+      </div>
+      <div className="grid grid-cols-2 gap-2 lg:grid-cols-3">
+        {packOptions.map((packLabel) => {
+          const isSelected = selectedPacks.includes(packLabel);
+
+          return (
+            <button
+              key={packLabel}
+              type="button"
+              onClick={() => onChange(togglePackSelection(value, packLabel))}
+              className={`rounded-2xl border px-3 py-2 text-left text-xs font-medium transition ${
+                isSelected
+                  ? "border-[#8c6a43] bg-[#8c6a43] text-white"
+                  : "border-[#dbcbb7] bg-[#fffaf3] text-[#5e4a3a] hover:border-[#8c6a43]"
+              }`}
+            >
+              {packLabel}
+            </button>
+          );
+        })}
+      </div>
+      {hasCustomValue ? (
+        <div className="mt-2 text-[11px] text-[#a75d4d]">
+          Pack atual fora da lista: {value}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -1591,8 +1662,7 @@ export default function Page() {
                           </select>
                           <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8c6a43]" />
                         </div>
-                        <InputField
-                          placeholder="Pack contratado"
+                        <PackageSelector
                           value={editForm.package}
                           onChange={(value) => updateEditForm("package", value)}
                         />
@@ -1945,8 +2015,7 @@ export default function Page() {
                     </select>
                     <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8c6a43]" />
                   </div>
-                  <InputField
-                    placeholder="Pack contratado"
+                  <PackageSelector
                     value={form.package}
                     onChange={(value) => updateForm("package", value)}
                   />
