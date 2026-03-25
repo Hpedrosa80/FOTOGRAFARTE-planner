@@ -947,10 +947,10 @@ export default function Page() {
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="flex flex-col gap-4 rounded-[28px] border border-[#bfdbfe] bg-[#f5f9ff] p-6 shadow-sm md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">
-            <img 
-              src="/logo-fotografarte.png" 
-              alt="Fotografarte Logo" 
-              className="h-40 w-auto"
+            <img
+              src="/logo-fotografarte.svg"
+              alt="Fotografarte Logo"
+              className="h-24 w-auto rounded-3xl"
             />
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-[#1e3a5f]">
