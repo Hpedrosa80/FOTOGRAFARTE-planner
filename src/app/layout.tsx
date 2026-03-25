@@ -7,12 +7,12 @@ export const metadata: Metadata = {
   applicationName: "Fotografarte Planner",
   icons: {
     icon: [
-      { url: "/icon", type: "image/png", sizes: "512x512" },
+      { url: "/app-icon-square.png", type: "image/png", sizes: "512x512" },
     ],
     apple: [
-      { url: "/apple-icon", type: "image/png", sizes: "180x180" },
+      { url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" },
     ],
-    shortcut: ["/icon"],
+    shortcut: ["/app-icon-square.png"],
   },
   manifest: "/manifest.webmanifest",
   appleWebApp: {
