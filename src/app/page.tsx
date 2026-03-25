@@ -971,20 +971,20 @@ export default function Page() {
               <Calendar className="h-4 w-4" />
               <span>{isCloudSyncing ? "A atualizar cloud..." : "Atualizar do telemóvel"}</span>
             </button>
-            <div className="flex flex-col items-center gap-1 rounded-2xl border border-[#bfdbfe] bg-[#dbeafe] px-4 py-3 text-sm text-[#4b7abf]">
-              <div className="flex items-center gap-2">
+            <div className="flex min-h-[52px] flex-col justify-center rounded-2xl border border-[#bfdbfe] bg-[#dbeafe] px-4 py-3 text-sm text-[#4b7abf]">
+              <div className="flex items-center gap-2 leading-none">
                 <Calendar className="h-4 w-4" />
                 <span>{weddings.length} eventos registados</span>
               </div>
-              <div className="text-xs text-[#2563eb] font-medium">
+              <div className="mt-1 text-xs text-[#2563eb] font-medium leading-none">
                 {syncMode === "cloud" ? "Sync: Cloud" : "Sync: Local"}
               </div>
               {lastSync && (
-                <div className="text-xs text-[#6b9fd4]">
+                <div className="mt-1 text-[11px] text-[#6b9fd4] leading-none">
                   Última sync: {lastSync}
                 </div>
               )}
-              <div className="text-[11px] text-[#6b9fd4] text-center max-w-[240px]">
+              <div className="mt-1 max-w-[220px] text-[11px] text-[#6b9fd4] leading-tight">
                 {syncHint}
               </div>
             </div>
