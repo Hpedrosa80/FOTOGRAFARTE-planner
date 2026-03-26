@@ -1628,18 +1628,21 @@ export default function Page() {
                     className="h-11 w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] pl-9 pr-3 text-[#3f3125] outline-none focus:border-[#8c6a43]"
                   />
                 </div>
-                <div className="flex h-11 w-full items-center gap-2 rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 text-xs text-[#3f3125] md:w-[260px]">
-                  <span>Ano:</span>
+                <div className="relative flex h-11 w-full items-center rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 text-xs text-[#3f3125] transition focus-within:border-[#8c6a43] md:w-[260px]">
+                  <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-[#8c6a43]">
+                    Ano
+                  </span>
                   <select
                     value={yearFilter}
                     onChange={(e) => setYearFilter(e.target.value as any)}
-                    className="h-full flex-1 rounded-md border border-[#dbcbb7] bg-[#fffaf3] px-2 text-xs"
+                    className="h-full flex-1 appearance-none bg-transparent px-3 pr-8 text-sm text-[#3f3125] outline-none"
                   >
                     <option value="currentNext">Atual + Seguinte</option>
                     <option value="current">Atual</option>
                     <option value="next">Seguinte</option>
                     <option value="all">Todos</option>
                   </select>
+                  <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8c6a43]" />
                 </div>
               </div>
             </div>
