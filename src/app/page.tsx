@@ -98,6 +98,16 @@ const packOptions = [
   "Pack 2 video",
 ];
 
+const yearFilterOptions = ["2026", "2027", "2028", "2029"] as const;
+
+type YearFilter = "all" | (typeof yearFilterOptions)[number];
+
+const defaultYearFilter: YearFilter = yearFilterOptions.includes(
+  String(new Date().getFullYear()) as (typeof yearFilterOptions)[number]
+)
+  ? (String(new Date().getFullYear()) as YearFilter)
+  : yearFilterOptions[0];
+
 const emptyChecklist: WeddingChecklist = {
   contractSigned: false,
   signalReceived: false,
@@ -719,7 +729,7 @@ export default function Page() {
   const [syncHint, setSyncHint] = useState(
     "Sincronização local (define as chaves do Supabase para sincronizar com o telemóvel)."
   );
-  const [yearFilter, setYearFilter] = useState<"all" | "current" | "next" | "currentNext">("current");
+  const [yearFilter, setYearFilter] = useState<YearFilter>(defaultYearFilter);
   const [currentMonth, setCurrentMonth] = useState(() => {    const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
   });
@@ -867,13 +877,10 @@ export default function Page() {
   const selectedWedding = weddings.find((w) => w.id === selectedId) || null;
 
   const filteredByYear = useMemo(() => {
-    const currentYear = new Date().getFullYear();
     return filteredWeddings.filter((w) => {
       const d = new Date(w.date);
       if (yearFilter === "all") return true;
-      if (yearFilter === "current") return d.getFullYear() === currentYear;
-      if (yearFilter === "next") return d.getFullYear() === currentYear + 1;
-      return d.getFullYear() === currentYear || d.getFullYear() === currentYear + 1;
+      return d.getFullYear().toString() === yearFilter;
     });
   }, [filteredWeddings, yearFilter]);
 
@@ -1635,12 +1642,14 @@ export default function Page() {
                   <span className="mx-3 h-5 w-px bg-[#e7dacb]" aria-hidden="true" />
                   <select
                     value={yearFilter}
-                    onChange={(e) => setYearFilter(e.target.value as any)}
+                    onChange={(e) => setYearFilter(e.target.value as YearFilter)}
                     className="h-full flex-1 appearance-none bg-transparent pr-8 text-sm font-medium text-[#3f3125] outline-none"
                   >
-                    <option value="currentNext">Atual + Seguinte</option>
-                    <option value="current">Atual</option>
-                    <option value="next">Seguinte</option>
+                    {yearFilterOptions.map((yearOption) => (
+                      <option key={yearOption} value={yearOption}>
+                        {yearOption}
+                      </option>
+                    ))}
                     <option value="all">Todos</option>
                   </select>
                   <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8c6a43]" />
