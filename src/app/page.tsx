@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../lib/supabase";
 import {
   Calendar,
@@ -316,29 +316,37 @@ function InputField({
 function DateInputField({
   value,
   onChange,
-  placeholder = "Dia / Mes / Ano",
+  placeholder = "DATA do casamento",
 }: {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
 }) {
-  const [isFocused, setIsFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const displayValue =
-    !isFocused && value
-      ? new Date(`${value}T00:00:00`).toLocaleDateString("pt-PT")
-      : value;
+  const displayValue = value
+    ? new Date(`${value}T00:00:00`).toLocaleDateString("pt-PT")
+    : placeholder;
 
   return (
-    <input
-      type={isFocused ? "date" : "text"}
-      value={displayValue}
-      onFocus={() => setIsFocused(true)}
-      onBlur={() => setIsFocused(false)}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      className="w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2.5 text-sm text-[#3f3125] outline-none transition placeholder:text-xs placeholder:text-[#9c8974] focus:border-[#8c6a43]"
-    />
+    <div className="relative">
+      <div
+        className={`w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2.5 text-sm outline-none transition ${
+          value ? "text-[#3f3125]" : "text-[#9c8974]"
+        }`}
+      >
+        {displayValue}
+      </div>
+      <input
+        ref={inputRef}
+        type="date"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onClick={() => inputRef.current?.showPicker?.()}
+        className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+        aria-label={placeholder}
+      />
+    </div>
   );
 }
 
