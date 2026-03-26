@@ -326,7 +326,7 @@ function InputField({
 function DateInputField({
   value,
   onChange,
-  placeholder = "DATA do casamento",
+  placeholder = "Data do casamento",
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -341,8 +341,8 @@ function DateInputField({
   return (
     <div className="relative">
       <div
-        className={`w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2.5 text-sm outline-none transition ${
-          value ? "text-[#3f3125]" : "text-[#9c8974]"
+        className={`w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2.5 outline-none transition ${
+          value ? "text-sm text-[#3f3125]" : "text-xs text-[#9c8974]"
         }`}
       >
         {displayValue}
