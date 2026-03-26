@@ -313,6 +313,35 @@ function InputField({
   );
 }
 
+function DateInputField({
+  value,
+  onChange,
+  placeholder = "Dia / Mes / Ano",
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+}) {
+  const [isFocused, setIsFocused] = useState(false);
+
+  const displayValue =
+    !isFocused && value
+      ? new Date(`${value}T00:00:00`).toLocaleDateString("pt-PT")
+      : value;
+
+  return (
+    <input
+      type={isFocused ? "date" : "text"}
+      value={displayValue}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      className="w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2.5 text-sm text-[#3f3125] outline-none transition placeholder:text-xs placeholder:text-[#9c8974] focus:border-[#8c6a43]"
+    />
+  );
+}
+
 function FinanceInputCard({
   label,
   value,
@@ -1741,9 +1770,7 @@ export default function Page() {
                     <div>
                       <SectionTitle icon={<Home className="h-4 w-4" />} title="Detalhes" />
                       <div className="space-y-2">
-                        <InputField
-                          type="date"
-                          placeholder="Data"
+                        <DateInputField
                           value={editForm.date}
                           onChange={(value) => updateEditForm("date", value)}
                         />
@@ -2146,9 +2173,7 @@ export default function Page() {
               <div>
                 <SectionTitle icon={<Home className="h-4 w-4" />} title="Detalhes do serviço" />
                 <div className="space-y-2">
-                  <InputField
-                    type="date"
-                    placeholder="Data"
+                  <DateInputField
                     value={form.date}
                     onChange={(value) => updateForm("date", value)}
                   />
