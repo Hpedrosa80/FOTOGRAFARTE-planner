@@ -894,12 +894,12 @@ export default function Page() {
 
   const pendingPaymentCount = filteredByYear.filter((w) => hasPendingPayment(w)).length;
 
-  const revenueTotal = weddings.reduce((acc, w) => {
+  const revenueTotal = filteredByYear.reduce((acc, w) => {
     const value = parseInt(w.total.replace(/\D/g, "") || "0", 10);
     return acc + value;
   }, 0);
 
-  const profitTotal = weddings.reduce((acc, w) => acc + calculateWeddingProfit(w), 0);
+  const profitTotal = filteredByYear.reduce((acc, w) => acc + calculateWeddingProfit(w), 0);
 
   const monthWeddings = filteredByYear.filter((w) =>
     isSameMonth(w.date, currentMonth)
