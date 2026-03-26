@@ -1265,24 +1265,24 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-[#f6f1ea] p-4 text-[#3f3125] md:p-8">
       <div className="mx-auto max-w-7xl space-y-6">
-        <div className="flex flex-col gap-4 rounded-[28px] border border-[#dbcbb7] bg-[#fffaf3] p-6 shadow-sm md:flex-row md:items-center md:justify-between">
-          <div className="flex items-center gap-3 md:gap-5">
+        <div className="flex flex-col gap-4 rounded-[28px] border border-[#dbcbb7] bg-[#fffaf3] p-6 shadow-sm">
+          <div className="flex flex-col items-center justify-center gap-3 text-center md:gap-4">
             <img
               src="/logo-fotografarte-preto.png"
               alt="Fotografarte Logo"
               className="h-24 w-auto shrink-0 object-contain md:h-32"
             />
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col items-center justify-center">
               <h1 className="text-2xl font-bold tracking-tight text-[#3f3125]">
                 FOTOGRAFARTE wedding planner
               </h1>
-              <p className="mt-1 text-sm text-[#7b6958]">
+              <p className="mt-1 max-w-2xl text-sm text-[#7b6958]">
                 Organiza casais, contactos, locais, pagamentos, timeline do dia e entregas dos teus casamentos.
               </p>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-3 md:justify-end">
+          <div className="flex flex-wrap justify-center gap-3 md:justify-center">
             <button
               onClick={refreshFromCloud}
               className="flex items-center gap-2 rounded-full border border-[#d8c8b4] bg-[#f9f3eb] px-3 py-2 text-xs font-medium text-[#8c6a43] transition-colors hover:bg-[#efe4d6] md:text-sm"
