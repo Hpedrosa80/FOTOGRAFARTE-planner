@@ -1266,11 +1266,11 @@ export default function Page() {
             <img
               src="/logo-fotografarte-preto.png"
               alt="Fotografarte Logo"
-              className="h-20 w-auto shrink-0 object-contain md:h-28"
+              className="h-24 w-auto shrink-0 object-contain md:h-32"
             />
             <div className="flex flex-col justify-center">
               <h1 className="text-2xl font-bold tracking-tight text-[#3f3125]">
-                FOTOGRAFARTE planner
+                FOTOGRAFARTE wedding planner
               </h1>
               <p className="mt-1 text-sm text-[#7b6958]">
                 Organiza casais, contactos, locais, pagamentos, timeline do dia e entregas dos teus casamentos.
