@@ -1628,14 +1628,15 @@ export default function Page() {
                     className="h-11 w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] pl-9 pr-3 text-[#3f3125] outline-none focus:border-[#8c6a43]"
                   />
                 </div>
-                <div className="relative flex h-11 w-full items-center rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 text-xs text-[#3f3125] transition focus-within:border-[#8c6a43] md:w-[260px]">
-                  <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-[#8c6a43]">
+                <div className="relative flex h-11 w-full items-center rounded-2xl border border-[#d8c8b4] bg-[#fcf7f1] px-3 text-xs text-[#3f3125] shadow-sm transition focus-within:border-[#8c6a43] focus-within:ring-2 focus-within:ring-[#efe4d6] md:w-[260px]">
+                  <span className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8c6a43]">
                     Ano
                   </span>
+                  <span className="mx-3 h-5 w-px bg-[#e7dacb]" aria-hidden="true" />
                   <select
                     value={yearFilter}
                     onChange={(e) => setYearFilter(e.target.value as any)}
-                    className="h-full flex-1 appearance-none bg-transparent px-3 pr-8 text-sm text-[#3f3125] outline-none"
+                    className="h-full flex-1 appearance-none bg-transparent pr-8 text-sm font-medium text-[#3f3125] outline-none"
                   >
                     <option value="currentNext">Atual + Seguinte</option>
                     <option value="current">Atual</option>
