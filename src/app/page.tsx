@@ -712,6 +712,10 @@ export default function Page() {
   const [syncMode, setSyncMode] = useState<"cloud" | "local">("local");
   const [mobileSection, setMobileSection] = useState<"agenda" | "couple" | "add">("agenda");
   const [isAddPanelOpen, setIsAddPanelOpen] = useState(false);
+  const [mobileSummaryVisibility, setMobileSummaryVisibility] = useState({
+    revenue: false,
+    profit: false,
+  });
   const [syncHint, setSyncHint] = useState(
     "Sincronização local (define as chaves do Supabase para sincronizar com o telemóvel)."
   );
@@ -1323,9 +1327,28 @@ export default function Page() {
               </div>
               <div>
                 <p className="text-xs text-[#7b6958] md:text-sm">Faturação prevista</p>
-                <p className="text-xl font-bold text-[#3f3125] md:text-2xl">
+                <p className="hidden text-xl font-bold text-[#3f3125] md:block md:text-2xl">
                   {revenueTotal.toLocaleString("pt-PT")}€
                 </p>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setMobileSummaryVisibility((prev) => ({
+                      ...prev,
+                      revenue: !prev.revenue,
+                    }))
+                  }
+                  className="mt-1 text-left md:hidden"
+                >
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-[#8c6a43]">
+                    {mobileSummaryVisibility.revenue ? "Ocultar valor" : "Ver valor"}
+                  </span>
+                  {mobileSummaryVisibility.revenue && (
+                    <span className="mt-1 block text-xl font-bold text-[#3f3125]">
+                      {revenueTotal.toLocaleString("pt-PT")}€
+                    </span>
+                  )}
+                </button>
               </div>
             </div>
           </div>
@@ -1337,9 +1360,28 @@ export default function Page() {
               </div>
               <div>
                 <p className="text-xs text-[#7b6958] md:text-sm">Lucro Previsto</p>
-                <p className={`text-xl font-bold md:text-2xl ${profitTotal >= 0 ? "text-[#5d6b43]" : "text-[#a75d4d]"}`}>
+                <p className={`hidden text-xl font-bold md:block md:text-2xl ${profitTotal >= 0 ? "text-[#5d6b43]" : "text-[#a75d4d]"}`}>
                   {profitTotal >= 0 ? "+" : ""}{profitTotal.toLocaleString("pt-PT")}€
                 </p>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setMobileSummaryVisibility((prev) => ({
+                      ...prev,
+                      profit: !prev.profit,
+                    }))
+                  }
+                  className="mt-1 text-left md:hidden"
+                >
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-[#5d6b43]">
+                    {mobileSummaryVisibility.profit ? "Ocultar valor" : "Ver valor"}
+                  </span>
+                  {mobileSummaryVisibility.profit && (
+                    <span className={`mt-1 block text-xl font-bold ${profitTotal >= 0 ? "text-[#5d6b43]" : "text-[#a75d4d]"}`}>
+                      {profitTotal >= 0 ? "+" : ""}{profitTotal.toLocaleString("pt-PT")}€
+                    </span>
+                  )}
+                </button>
               </div>
             </div>
           </div>
