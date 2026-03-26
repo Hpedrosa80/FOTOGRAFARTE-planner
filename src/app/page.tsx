@@ -1619,21 +1619,21 @@ export default function Page() {
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
-                <div className="relative w-full md:max-w-xs">
+                <div className="relative w-full md:w-[260px]">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8c6a43]" />
                   <input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Pesquisar casal, quinta, igreja..."
-                    className="w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] py-2 pl-9 pr-3 text-[#3f3125] outline-none focus:border-[#8c6a43]"
+                    className="h-11 w-full rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] pl-9 pr-3 text-[#3f3125] outline-none focus:border-[#8c6a43]"
                   />
                 </div>
-                <div className="flex items-center gap-2 rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 py-2 text-xs text-[#3f3125]">
+                <div className="flex h-11 w-full items-center gap-2 rounded-2xl border border-[#dbcbb7] bg-[#fffaf3] px-3 text-xs text-[#3f3125] md:w-[260px]">
                   <span>Ano:</span>
                   <select
                     value={yearFilter}
                     onChange={(e) => setYearFilter(e.target.value as any)}
-                    className="rounded-md border border-[#dbcbb7] bg-[#fffaf3] px-2 py-1 text-xs"
+                    className="h-full flex-1 rounded-md border border-[#dbcbb7] bg-[#fffaf3] px-2 text-xs"
                   >
                     <option value="currentNext">Atual + Seguinte</option>
                     <option value="current">Atual</option>
