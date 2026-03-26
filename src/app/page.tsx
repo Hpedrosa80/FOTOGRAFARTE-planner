@@ -719,7 +719,7 @@ export default function Page() {
   const [syncHint, setSyncHint] = useState(
     "Sincronização local (define as chaves do Supabase para sincronizar com o telemóvel)."
   );
-  const [yearFilter, setYearFilter] = useState<"all" | "current" | "next" | "currentNext">("currentNext");
+  const [yearFilter, setYearFilter] = useState<"all" | "current" | "next" | "currentNext">("current");
   const [currentMonth, setCurrentMonth] = useState(() => {    const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
   });
